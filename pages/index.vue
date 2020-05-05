@@ -15,7 +15,7 @@
       </div>
       <v-card>
         <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
+          {{ message }}
         </v-card-title>
         <v-card-text>
           <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
@@ -79,17 +79,21 @@
   </v-layout>
 </template>
 
-<script>
+<script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 
 @Component({
-  Logo,
-  VuetifyLogo
+  components: {
+    Logo,
+    VuetifyLogo
+  }
 })
 
-export default class Index extends Vue {}
+export default class Index extends Vue {
+  message = 'Welcome to the Pomona website!'
+}
 
 </script>
