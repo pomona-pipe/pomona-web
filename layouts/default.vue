@@ -44,8 +44,23 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-footer :fixed="fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+    <v-footer color="primary lighten-1" padless>
+      <v-row justify="center" no-gutters>
+        <v-btn
+          v-for="link in links"
+          :key="link"
+          :nuxt="true"
+          :to="link.to"
+          color="white"
+          text
+          rounded
+          class="my-2"
+        >{{ link.name }}</v-btn>
+        <v-col class="primary lighten-2 py-4 text-center white--text" cols="12">
+          {{ new Date().getFullYear() }} —
+          <strong>Vuetify</strong>
+        </v-col>
+      </v-row>
     </v-footer>
   </v-app>
 </template>
@@ -74,5 +89,13 @@ export default class DefaultLayout extends Vue {
   right = true
   rightDrawer = false
   title = 'Vuetify.js'
+  links = [
+    { name: 'Home', to: '/' },
+    { name: 'About Us', to: '/inspire' },
+    { name: 'Team', to: '/inspire' },
+    { name: 'Services', to: '/inspire' },
+    { name: 'Blog', to: '/inspire' },
+    { name: 'Contact Us', to: '/inspire' }
+  ]
 }
 </script>
