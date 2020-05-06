@@ -14,8 +14,11 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/prismic": "^1.2.1",
     "nuxt": "^2.0.0",
-    "nuxt-ts": "^2.8.1"
+    "nuxt-ts": "^2.8.1",
+    "prismic-javascript": "^2.7.1",
+    "prismic-vue": "^2.0.1"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.6.0",

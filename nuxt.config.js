@@ -43,8 +43,17 @@ export default {
   */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
+    '@/modules/static',
+    '@/modules/crawler',
     '@nuxtjs/axios',
+    '@nuxtjs/prismic'
   ],
+  // This is where you configure your settings for the new plugin
+  prismic: {
+    endpoint: 'https://pomona.cdn.prismic.io/api/v2',
+    linkResolver: '@/plugins/link-resolver',
+    htmlSerializer: '@/plugins/html-serializer',
+  },
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
@@ -80,6 +89,7 @@ export default {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
+      config.resolve.alias['vue'] = 'vue/dist/vue.common'
     }
   }
 }
