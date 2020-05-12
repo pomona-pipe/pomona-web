@@ -55,19 +55,34 @@
           <v-btn color="primary" nuxt to="/inspire">Continue</v-btn>
         </v-card-actions>
       </v-card>
-      <!-- check posts exists -->
-      <div v-if="products.length !== 0">
-        <!-- template for products cards -->
-        <section v-for="product in products" :key="product.id" v-bind:product="product">
-          <v-card class="mx-auto" max-width="344">
-            <v-img :src=product.cover_image.url  height="200px"></v-img>
+      <v-container>
+          <!-- check posts exists -->
+        <v-layout row wrap v-if="products.length !== 0" column justify-center align-center>
+          <!-- template for products cards -->
+          <!-- <v-flex xs12 sm8 md6 v-for="product in products" :key="product.id" v-bind:product="product">
+            <v-card class="mx-auto" max-width="344">
+              <v-img :src="product.cover_image.url" height="200px"></v-img>
 
-            <v-card-title> {{ product.name[0].text }}</v-card-title>
+              <v-card-title>{{ product.name[0].text }}</v-card-title>
 
-            <v-card-subtitle>{{ product.description[0].text }}</v-card-subtitle>
-          </v-card>
-        </section>
-      </div>
+              <v-card-subtitle>{{ product.description[0].text }}</v-card-subtitle>
+            </v-card> -->
+          <!-- </v-flex> -->
+        </v-layout>
+      </v-container>
+       <v-container>
+          <!-- check posts exists -->
+        <v-layout row wrap v-if="product_categories.length !== 0" column justify-center align-center>
+          <!-- template for products cards -->
+          <v-flex xs12 sm8 md6 v-for="product_category in product_categories" :key="product_category.id" v-bind:product_category="product_category">
+            <v-card class="mx-auto" max-width="344">
+              <v-img :src="product_category.category_image.url" height="200px"></v-img>
+
+              <v-card-title>{{ product_category.category_title[0].text }}</v-card-title>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
     </v-flex>
   </v-layout>
 </template>
@@ -85,15 +100,19 @@ import VuetifyLogo from '~/components/VuetifyLogo.vue'
   }
 })
 export default class Index extends Vue {
-  message = 'Welcome to the Pomona website!'
-  products: any[]
+  message = 'Welcome to the Pomona website!';
+  products: any[];
+  product_categories: any[];
 
   // server-side nuxt lifecycle hook
   async asyncData({ $prismic, error }) {
     const byProducts = $prismic.predicates.at('document.type', 'products')
+    const byCategories = $prismic.predicates.at('document.type', 'product_categories')
     const products = await $prismic.api.query(byProducts)
+    const product_categories = await $prismic.api.query(byCategories)
     return {
-      products: products.results.map((result) => result.data)
+      products: products.results.map((result) => result.data),
+      product_categories: product_categories.results.map((result) => result.data)
     }
   }
 }
