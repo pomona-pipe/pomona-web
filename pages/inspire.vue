@@ -6,6 +6,7 @@
         alt="Vuetify.js"
         class="mb-5"
       >
+      
       <blockquote class="blockquote">
         &#8220;First, solve the problem. Then, write the code.&#8221;
         <footer>
@@ -14,6 +15,70 @@
           </small>
         </footer>
       </blockquote>
+      <v-container>
+          <!-- check product categories exists -->
+          <v-layout
+            row
+            wrap
+            v-if="product_categories.length !== 0"
+            column
+            justify-center
+            align-center
+          >
+            <!-- template for product category cards -->
+            <v-container fluid grid-list-lg>
+              <v-layout row wrap>
+                <v-flex
+                  xs12
+                  md6
+                  lg3
+                  v-for="product_category in product_categories"
+                  :key="product_category.id"
+                  v-bind:product_category="product_category"
+                >
+                  <v-hover v-slot:default="{ hover }" open-delay="200">
+                    <v-card :elevation="hover ? 16 : 2" class="mx-auto" max-width="344">
+                      <v-img :src="product_category.category_image.url" height="200px"></v-img>
+
+                      <v-card-title>{{ product_category.category_title[0].text }}</v-card-title>
+                    </v-card>
+                  </v-hover>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-layout>
+        </v-container>
     </v-flex>
   </v-layout>
 </template>
+
+<script lang="ts">
+import { Component, Vue } from 'nuxt-property-decorator'
+
+@Component({
+  components: {}
+})
+export default class Index extends Vue {
+  message = 'Welcome to the Pomona website!'
+  products: any[]
+  product_categories: any[]
+
+  // server-side nuxt lifecycle hook
+  async asyncData({ $prismic, error }) {
+    const byProducts = $prismic.predicates.at('document.type', 'products')
+    const byCategories = $prismic.predicates.at(
+      'document.type',
+      'product_categories'
+    )
+    const products = await $prismic.api.query(byProducts)
+    const product_categories = await $prismic.api.query(byCategories)
+    return {
+      products: products.results.map((result) => result.data),
+      product_categories: product_categories.results.map(
+        (result) => result.data
+      )
+    }
+  }
+}
+</script>
+
