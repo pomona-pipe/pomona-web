@@ -1,11 +1,40 @@
 <template>
   <v-layout column justify-center align-center>
-    <v-flex xs12 sm8 md6>
+    <v-flex xs12 md6 lg3>
       <v-app>
-        <div class="text-center">
-          <logo />
-          <vuetify-logo />
-        </div>
+        <v-container>
+          <!-- check product categories exists -->
+          <v-layout
+            row
+            wrap
+            v-if="product_categories.length !== 0"
+            column
+            justify-center
+            align-center
+          >
+            <!-- template for product category cards -->
+            <v-container fluid grid-list-lg>
+              <v-layout row wrap>
+                <v-flex
+                  xs12
+                  md6
+                  lg3
+                  v-for="product_category in product_categories"
+                  :key="product_category.id"
+                  v-bind:product_category="product_category"
+                >
+                  <v-hover v-slot:default="{ hover }" open-delay="200">
+                    <v-card :elevation="hover ? 16 : 2" class="mx-auto" max-width="344">
+                      <v-img :src="product_category.category_image.url" height="200px"></v-img>
+
+                      <v-card-title>{{ product_category.category_title[0].text }}</v-card-title>
+                    </v-card>
+                  </v-hover>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-layout>
+        </v-container>
         <v-card>
           <v-card-title class="headline">{{ message }}</v-card-title>
           <v-card-text>
@@ -71,33 +100,6 @@
             <!-- </v-flex> -->
           </v-layout>
         </v-container>
-        <v-container>
-          <!-- check posts exists -->
-          <v-layout
-            row
-            wrap
-            v-if="product_categories.length !== 0"
-            column
-            justify-center
-            align-center
-          >
-            <!-- template for products cards -->
-            <v-flex
-              xs12
-              sm8
-              md6
-              v-for="product_category in product_categories"
-              :key="product_category.id"
-              v-bind:product_category="product_category"
-            >
-              <v-card class="mx-auto" max-width="344">
-                <v-img :src="product_category.category_image.url" height="200px"></v-img>
-
-                <v-card-title>{{ product_category.category_title[0].text }}</v-card-title>
-              </v-card>
-            </v-flex>
-          </v-layout>
-        </v-container>
       </v-app>
     </v-flex>
   </v-layout>
@@ -106,14 +108,8 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
 @Component({
-  components: {
-    Logo,
-    VuetifyLogo
-  }
+  components: {}
 })
 export default class Index extends Vue {
   message = 'Welcome to the Pomona website!'
