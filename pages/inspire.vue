@@ -1,20 +1,6 @@
 <template>
   <v-layout>
-    <v-flex class="text-center">
-      <img
-        src="/v.png"
-        alt="Vuetify.js"
-        class="mb-5"
-      >
-      
-      <blockquote class="blockquote">
-        &#8220;First, solve the problem. Then, write the code.&#8221;
-        <footer>
-          <small>
-            <em>&mdash;John Johnson</em>
-          </small>
-        </footer>
-      </blockquote>
+    <v-flex>
       <v-container>
           <!-- check product categories exists -->
           <v-layout
@@ -26,7 +12,7 @@
             align-center
           >
             <!-- template for product category cards -->
-            <v-container fluid grid-list-lg>
+            <v-container fluid grid-list-sm>
               <v-layout row wrap>
                 <v-flex
                   xs12
