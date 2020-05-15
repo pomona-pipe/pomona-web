@@ -1,7 +1,6 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 md6 lg3>
-      <v-app>
         <v-container>
           <!-- check product categories exists -->
           <v-layout
@@ -85,52 +84,21 @@
             <v-btn color="primary" nuxt to="/inspire">Continue</v-btn>
           </v-card-actions>
         </v-card>
-        <v-container>
-          <!-- check posts exists -->
-          <v-layout row wrap v-if="products.length !== 0" column justify-center align-center>
-            <!-- template for products cards -->
-            <!-- <v-flex xs12 sm8 md6 v-for="product in products" :key="product.id" v-bind:product="product">
-            <v-card class="mx-auto" max-width="344">
-              <v-img :src="product.cover_image.url" height="200px"></v-img>
-
-              <v-card-title>{{ product.name[0].text }}</v-card-title>
-
-              <v-card-subtitle>{{ product.description[0].text }}</v-card-subtitle>
-            </v-card>-->
-            <!-- </v-flex> -->
-          </v-layout>
-        </v-container>
-      </v-app>
     </v-flex>
   </v-layout>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
+import { mapState } from 'vuex'
 
 @Component({
-  components: {}
+  components: {},
+  computed: mapState(['message', 'product_categories'])
 })
 export default class Index extends Vue {
-  message = 'Welcome to the Pomona website!'
-  products: any[]
-  product_categories: any[]
-
-  // server-side nuxt lifecycle hook
-  async asyncData({ $prismic, error }) {
-    const byProducts = $prismic.predicates.at('document.type', 'products')
-    const byCategories = $prismic.predicates.at(
-      'document.type',
-      'product_categories'
-    )
-    const products = await $prismic.api.query(byProducts)
-    const product_categories = await $prismic.api.query(byCategories)
-    return {
-      products: products.results.map((result) => result.data),
-      product_categories: product_categories.results.map(
-        (result) => result.data
-      )
-    }
+  async fetch({ store, $prismic }) {
+    await store.dispatch('getProductCategories', $prismic)
   }
 }
 </script>

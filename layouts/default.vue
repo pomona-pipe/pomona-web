@@ -4,7 +4,7 @@
       <img src="~/assets/logo_xlarge.png" class="pomona_logo"/>
       <v-row justify="center" no-gutters>
         <v-btn
-          v-for="link in links"
+          v-for="link in navLinks"
           :key="link"
           :nuxt="true"
           :to="link.to"
@@ -28,7 +28,7 @@
     <v-footer color="#303030" padless>
       <v-row justify="center" no-gutters>
         <v-btn
-          v-for="link in links"
+          v-for="link in navLinks"
           :key="link"
           :nuxt="true"
           :to="link.to"
@@ -57,39 +57,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-// import pomona_logo from '~/assets/logo_xlarge.png'
+import { mapState } from 'vuex'
 
-@Component({})
+@Component({
+  components: {},
+  computed: mapState('layout', ['navLinks'])
+})
 export default class DefaultLayout extends Vue {
-
-  clipped = false
-  drawer = false
-  fixed = false
-  items = [
-    {
-      icon: 'mdi-apps',
-      title: 'Welcome',
-      to: '/'
-    },
-    {
-      icon: 'mdi-chart-bubble',
-      title: 'Inspire',
-      to: '/inspire'
-    }
-  ]
-  miniVariant = false
-  right = true
-  rightDrawer = false
-  title = 'Vuetify.js'
-
-  links = [
-    { name: 'Bridges & Structures', to: '/' },
-    { name: 'Pipe', to: '/inspire' },
-    { name: 'Stormwater Management', to: '/inspire' },
-    { name: 'Geosynthetics', to: '/inspire' },
-    { name: 'Masonry', to: '/inspire' },
-    { name: 'Other Products', to: '/inspire' }
-  ]
  
 }
 </script>

@@ -40,30 +40,15 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
+import { mapState } from 'vuex'
 
 @Component({
-  components: {}
+  components: {},
+  computed: mapState(['message', 'product_categories'])
 })
 export default class Index extends Vue {
-  message = 'Welcome to the Pomona website!'
-  products: any[]
-  product_categories: any[]
-
-  // server-side nuxt lifecycle hook
-  async asyncData({ $prismic, error }) {
-    const byProducts = $prismic.predicates.at('document.type', 'products')
-    const byCategories = $prismic.predicates.at(
-      'document.type',
-      'product_categories'
-    )
-    const products = await $prismic.api.query(byProducts)
-    const product_categories = await $prismic.api.query(byCategories)
-    return {
-      products: products.results.map((result) => result.data),
-      product_categories: product_categories.results.map(
-        (result) => result.data
-      )
-    }
+  async fetch({ store, $prismic }) {
+    await store.dispatch('getProductCategories', $prismic)
   }
 }
 </script>
