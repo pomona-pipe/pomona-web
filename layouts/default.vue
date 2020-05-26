@@ -91,8 +91,6 @@
 import { Component, Vue } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
 
-const Prismic = require('prismic-javascript')
-
 @Component({
   components: {},
   computed: {
