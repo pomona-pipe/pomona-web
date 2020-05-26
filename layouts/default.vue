@@ -28,12 +28,16 @@
               v-for="subNavOption in navOption[0].items"
               :key="subNavOption.sub_nav_link.id"
               :nuxt="true"
-              :to="{ path: `/${navOption[0].primary.link.uid}/${subNavOption.sub_nav_link.uid}` }"
+              :to="{
+                path: `/${navOption[0].primary.link.uid}/${subNavOption.sub_nav_link.uid}`
+              }"
               text
               rounded
               class="my-2"
             >
-              <v-list-item-title>{{ subNavOption.sub_nav_link_label[0].text }}</v-list-item-title>
+              <v-list-item-title>{{
+                subNavOption.sub_nav_link_label[0].text
+              }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
