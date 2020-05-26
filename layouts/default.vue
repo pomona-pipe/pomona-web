@@ -1,32 +1,39 @@
 <template>
   <v-app>
     <v-app-bar app fixed color="#303030" dark shrink-on-scroll dense>
-        <img src="~/assets/logo_xlarge.png"  class="pomona_logo"/>
+      <img src="~/assets/logo_xlarge.png" class="pomona_logo" />
       <div>
-        <v-menu v-for="link in navLinks" :key="link" open-on-hover bottom offset-y>
+        <v-menu
+          v-for="navOption in mainNavigation"
+          :key="navOption[0].primary.link.id"
+          open-on-hover
+          bottom
+          offset-y
+        >
           <!-- non-repeat -->
           <template v-slot:activator="{ on }">
             <v-btn
               :nuxt="true"
-              :to="{path: link.title.path }"
+              :to="{ path: navOption[0].primary.link.uid }"
               color="#303030"
               dark
               v-on="on"
-            >{{ link.title.text }}</v-btn>
+              >{{ navOption[0].primary.label[0].text }}</v-btn
+            >
           </template>
 
           <!-- repeat -->
-          <v-list v-if="Object.keys(link).includes('sub_nav')">
+          <v-list v-if="navOption[0].items && navOption[0].items.length > 0">
             <v-list-item
-              v-for="dropdown in link.sub_nav"
-              :key="dropdown"
+              v-for="subNavOption in navOption[0].items"
+              :key="subNavOption.sub_nav_link.id"
               :nuxt="true"
-              :to="{path: dropdown.path }"
+              :to="{ path: `/${navOption[0].primary.link.uid}/${subNavOption.sub_nav_link.uid}` }"
               text
               rounded
               class="my-2"
             >
-              <v-list-item-title>{{ dropdown.text }}</v-list-item-title>
+              <v-list-item-title>{{ subNavOption.sub_nav_link_label[0].text }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
