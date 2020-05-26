@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app fixed color="#303030" dark shrink-on-scroll dense>
-        <img src="~/assets/logo_xlarge.png"  class="pomona_logo"/> 
+        <img src="~/assets/logo_xlarge.png"  class="pomona_logo"/>
       <div>
         <v-menu v-for="link in navLinks" :key="link" open-on-hover bottom offset-y>
           <!-- non-repeat -->
@@ -80,9 +80,17 @@
 import { Component, Vue } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
 
+const Prismic = require('prismic-javascript')
+
 @Component({
   components: {},
-  computed: mapState('layout', ['navLinks'])
+  computed: {
+    ...mapState('layout', ['mainNavigation', 'navLinks'])
+  }
 })
-export default class DefaultLayout extends Vue {}
+export default class DefaultLayout extends Vue {
+  async middleware({ store, $prismic }) {
+    await store.dispatch('layout/getMainNavigation', $prismic)
+  }
+}
 </script>
