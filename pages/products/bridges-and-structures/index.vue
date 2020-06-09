@@ -6,38 +6,25 @@
         <div>
           <h1>This is the Bridges And Structures page</h1>
         </div>
-        <v-layout
-          row
-          wrap
-          v-if="productCategories.length !== 0"
-          column
-          justify-center
-          align-center
-        >
+        <v-layout row wrap v-if="products.length !== 0" column justify-center align-center>
           <!-- template for product category cards -->
           <v-container fluid grid-list-sm>
             <v-layout row wrap>
-              <v-flex
-                xs12
-                md6
-                lg3
-                v-for="cat in productCategories"
-                :key="cat.id"
-              >
-                <v-hover v-slot:default="{ hover }" open-delay="200">
-                  <v-card
-                    :elevation="hover ? 16 : 2"
-                    class="mx-auto"
-                    max-width="344"
-                  >
-                    <v-img :src="cat.category_image.url" height="200px"></v-img>
+              <v-container v-for="product in products" :key="product.id">
+                <v-flex xs12 md6 lg3 v-if="product.product_category === 'Bridges & Structures'">
+                  <v-hover v-slot:default="{ hover }" open-delay="200">
+                    <v-card :elevation="hover ? 16 : 2" class="mx-auto" max-width="344">
+                      <v-img :src="product.cover_image.url" height="200px"></v-img>
 
-                    <v-card-title>{{
-                      cat.category_title[0].text
-                    }}</v-card-title>
-                  </v-card>
-                </v-hover>
-              </v-flex>
+                      <v-card-title>
+                        {{
+                        product.name[0].text
+                        }}
+                      </v-card-title>
+                    </v-card>
+                  </v-hover>
+                </v-flex>
+              </v-container>
             </v-layout>
           </v-container>
         </v-layout>
@@ -53,12 +40,12 @@ import { mapState } from 'vuex'
 @Component({
   components: {},
   computed: {
-    ...mapState('products', ['productCategories'])
+    ...mapState('products', ['products'])
   }
 })
 export default class Index extends Vue {
   async fetch({ store, $prismic }) {
-    await store.dispatch('products/getProductCategories', $prismic)
+    await store.dispatch('products/getProductByUid', $prismic)
   }
 }
 </script>
