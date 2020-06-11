@@ -8,7 +8,7 @@ export const mutations = {
     state.productCategories = payload
   },
   addProduct(state, payload) {
-    state.products = payload
+    state.products = state.products.concat(payload)
   }
 }
 export const actions = {
@@ -24,14 +24,11 @@ export const actions = {
       (result) => result.data
     ))
   },
-  async getProductByUid({
-    commit
-  }, $prismic) {
-    const byUid = $prismic.predicates.at(
-      'document.type',
-      'products'
+  async getProductsByCategory({ commit }, {$prismic, category} ) {
+    const byCategory = $prismic.predicates.at(
+      'my.products.product_category', category
     )
-    const product = await $prismic.api.query(byUid)
+    const product = await $prismic.api.query(byCategory)
     commit('addProduct', product.results.map(
       (result) => result.data
     ))
