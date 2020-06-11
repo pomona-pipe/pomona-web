@@ -14,7 +14,7 @@
           <template v-slot:activator="{ on }">
             <v-btn
               :nuxt="true"
-              :to="{ path: navOption[0].primary.link.uid }"
+              :to="{ path: `/${navOption[0].primary.link.uid}` }"
               color="#303030"
               dark
               v-on="on"
