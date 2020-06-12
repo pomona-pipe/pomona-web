@@ -5,7 +5,7 @@
       <div>
         <v-menu
           v-for="navOption in mainNavigation"
-          :key="navOption[0].primary.link.id"
+          :key="navOption.primary.link.id"
           open-on-hover
           bottom
           offset-y
@@ -14,22 +14,22 @@
           <template v-slot:activator="{ on }">
             <v-btn
               :nuxt="true"
-              :to="{ path: `/${navOption[0].primary.link.uid}` }"
+              :to="{ path: `/${navOption.primary.link.uid}` }"
               color="#303030"
               dark
               v-on="on"
-              >{{ navOption[0].primary.label[0].text }}</v-btn
+              >{{ navOption.primary.label[0].text }}</v-btn
             >
           </template>
 
           <!-- repeat -->
-          <v-list v-if="navOption[0].items && navOption[0].items.length > 0">
+          <v-list v-if="navOption.items && navOption.items.length > 0">
             <v-list-item
-              v-for="subNavOption in navOption[0].items"
+              v-for="subNavOption in navOption.items"
               :key="subNavOption.sub_nav_link.id"
               :nuxt="true"
               :to="{
-                path: `/${navOption[0].primary.link.uid}/${subNavOption.sub_nav_link.uid}`
+                path: `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}`
               }"
               text
               rounded

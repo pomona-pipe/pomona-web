@@ -7,8 +7,8 @@ export const mutations = {
   toggleMobileDrawer(state) {
     state.mobileDrawer = !state.mobileDrawer
   },
-  setMainNavigation(state, mainNavigation) {
-    state.mainNavigation = mainNavigation
+  setMainNavigation(state, payload) {
+    state.mainNavigation = payload
   }
 }
 
@@ -21,7 +21,7 @@ export const actions = {
     const mainNavigation = await $prismic.api.query(byMainNavigation)
     commit(
       'setMainNavigation',
-      mainNavigation.results.map((result) => result.data.nav)
+      mainNavigation.results[0].data.nav
     )
   }
 }
