@@ -5,13 +5,22 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { mapState } from 'vuex'
+import { PrismicClient } from '~/shims'
 @Component({})
 export default class DetailPage extends Vue {
-  async fetch({ $prismic, params, error }) {
-    try{
+  async fetch({
+    $prismic,
+    params,
+    error
+  }: {
+    $prismic: PrismicClient
+    params: any
+    error: any
+  }) {
+    try {
       // Query to get post content
-      this.document = (await $prismic.api.getByUID('page', params.uid)).data
+      const document = (await $prismic.getByUID('page', params.uid, {})).data
+      return { document }
     } catch (e) {
       // Returns error page
       error({ statusCode: 404, message: 'Page not found' })
