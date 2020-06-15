@@ -90,7 +90,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import { Store, mapState } from 'vuex'
-import { PrismicClient } from '~/shims'
+import { Prismic } from '~/shims'
 
 @Component({
   components: {},
@@ -104,7 +104,7 @@ export default class DefaultLayout extends Vue {
     $prismic
   }: {
     store: Store<any>
-    $prismic: PrismicClient
+    $prismic: Prismic
   }) {
     await store.dispatch('layout/getMainNavigation', $prismic)
   }

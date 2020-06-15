@@ -7,9 +7,9 @@
           <h1>This is the Pipe page</h1>
         </div>
         <v-layout
+          v-if="products.length > 0"
           row
           wrap
-          v-if="products.length !== 0"
           column
           justify-center
           align-center
@@ -47,9 +47,9 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { Store, mapState } from 'vuex'
+import { Store } from 'vuex'
 import { find } from 'lodash'
-import { PrismicClient } from '~/shims'
+import { Prismic } from '~/shims'
 
 const category = 'Pipe'
 
@@ -61,13 +61,7 @@ export default class ProductCategoryPage extends Vue {
     )
   }
 
-  async fetch({
-    store,
-    $prismic
-  }: {
-    store: Store<any>
-    $prismic: PrismicClient
-  }) {
+  async fetch({ store, $prismic }: { store: Store<any>; $prismic: Prismic }) {
     const productsExist = find(store.state.products.products, [
       'product_category',
       category

@@ -5,7 +5,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { PrismicClient } from '~/shims'
+import { Prismic } from '~/shims'
 @Component({})
 export default class DetailPage extends Vue {
   async fetch({
@@ -13,7 +13,7 @@ export default class DetailPage extends Vue {
     params,
     error
   }: {
-    $prismic: PrismicClient
+    $prismic: Prismic
     params: any
     error: any
   }) {

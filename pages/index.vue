@@ -4,9 +4,9 @@
       <v-container>
         <!-- check product categories exists -->
         <v-layout
+          v-if="productCategories.length > 0"
           row
           wrap
-          v-if="productCategories.length !== 0"
           column
           justify-center
           align-center
@@ -15,11 +15,11 @@
           <v-container fluid grid-list-lg>
             <v-layout row wrap>
               <v-flex
+                v-for="cat in productCategories"
+                :key="cat.id"
                 xs12
                 md6
                 lg3
-                v-for="cat in productCategories"
-                :key="cat.id"
               >
                 <v-hover v-slot:default="{ hover }" open-delay="200">
                   <v-card
@@ -96,7 +96,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import { Store, mapState } from 'vuex'
-import { PrismicClient } from '~/shims'
+import { Prismic } from '~/shims'
 
 @Component({
   components: {},
@@ -105,13 +105,7 @@ import { PrismicClient } from '~/shims'
   }
 })
 export default class Index extends Vue {
-  async fetch({
-    store,
-    $prismic
-  }: {
-    store: Store<any>
-    $prismic: PrismicClient
-  }) {
+  async fetch({ store, $prismic }: { store: Store<any>; $prismic: Prismic }) {
     await store.dispatch('products/getProductCategories', $prismic)
   }
 }
