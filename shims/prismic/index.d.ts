@@ -1,70 +1,20 @@
-/*
-  shim for $prismic on Vue prototype - injected by prismic-vue
-  https://github.com/prismicio/prismic-vue/issues/5
-  more details about $prismic can be found at ./node_modules/prismic-vue/src/index.js
-*/
-// TODO: review VuePrismic interface - many discrepancies between type defs and actual usage
-import { getApi } from 'prismic-javascript'
-import { DefaultClient } from 'prismic-javascript/d.ts/client'
+// shim for $prismic on Vue prototype - injected by prismic-vue
+import ResolvedApi from 'prismic-javascript/d.ts/ResolvedApi'
 
-import Vue from 'vue'
-
-type ThenArg<T> = T extends Promise<infer U> ? U : T
-type PrismicAPIPromise = ReturnType<typeof getApi>
-type PrismicAPI = ThenArg<PrismicAPIPromise>
-
-type ElementType =
-  | 'heading1'
-  | 'heading2'
-  | 'heading3'
-  | 'heading4'
-  | 'heading5'
-  | 'heading6'
-  | 'paragraph'
-  | 'preformatted'
-  | 'strong'
-  | 'em'
-  | 'list-item'
-  | 'o-list-item'
-  | 'group-list-item'
-  | 'group-o-list-item'
-  | 'image'
-  | 'embed'
-  | 'hyperlink'
-  | 'label'
-  | 'span'
-
-type Elements = { [key in ElementType]: string }
-
-type HTMLSerializer<T> = (
-  type: ElementType,
-  element: any,
-  text: string | null,
-  children: T[],
-  index: number
-) => T
-
-interface RichText {
-  Elements: Elements
+export default interface IPrismic {
+  api: ResolvedApi
+  apiEndpoint: 'https://pomona.cdn.prismic.io/api/v2'
+  asDate(date: string): Date
   asHtml(
     richText: any,
     linkResolver?: (doc: any) => string,
-    serializer?: HTMLSerializer<string>
+    htmlSerializer?: HTMLSerializer<string>
   ): string
+  asLink(link: any, linkResolver?: (doc: any) => string): string
   asText(richText: any, joinString?: string): string
-}
-
-interface Link {
-  url(link: any, linkResolver?: (doc: any) => string): string
-}
-
-interface VuePrismic {
-  endpoint: string
-  linkResolver: (doc: any) => string
+  dom: DOM
   htmlSerializer: HTMLSerializer<string>
-  // replaced client with api
-  api: DefaultClient
-  // add predicates
+  linkResolver: (doc: any) => string
   predicates: {
     at(
       fragment: string,
@@ -161,16 +111,4 @@ interface VuePrismic {
       ): string
     }
   }
-  richTextAsPlain: (field: string) => string
 }
-
-type PrismicVue<T> = VuePrismic & T
-
-declare module 'vue/types/vue' {
-  interface Vue {
-    $prismic: PrismicVue<PrismicAPI>
-  }
-}
-
-// use this for $prismic type
-type Prismic = PrismicVue<PrismicAPI>

@@ -5,7 +5,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { Prismic } from '~/shims'
+import { IPrismic } from '~/shims'
 @Component({})
 export default class DetailPage extends Vue {
   async fetch({
@@ -13,13 +13,13 @@ export default class DetailPage extends Vue {
     params,
     error
   }: {
-    $prismic: Prismic
+    $prismic: IPrismic
     params: any
     error: any
   }) {
     try {
       // Query to get post content
-      const document = (await $prismic.getByUID('page', params.uid, {})).data
+      const document = (await $prismic.api.getByUID('page', params.uid)).data
       return { document }
     } catch (e) {
       // Returns error page

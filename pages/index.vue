@@ -96,7 +96,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import { Store, mapState } from 'vuex'
-import { Prismic } from '~/shims'
+import { IPrismic } from '~/shims'
 
 @Component({
   components: {},
@@ -105,7 +105,7 @@ import { Prismic } from '~/shims'
   }
 })
 export default class Index extends Vue {
-  async fetch({ store, $prismic }: { store: Store<any>; $prismic: Prismic }) {
+  async fetch({ store, $prismic }: { store: Store<any>; $prismic: IPrismic }) {
     await store.dispatch('products/getProductCategories', $prismic)
   }
 }

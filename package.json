@@ -16,6 +16,7 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/prismic": "^1.2.1",
     "@types/lodash": "^4.14.155",
+    "@types/prismic-dom": "^2.1.1",
     "lodash": "^4.17.15",
     "nuxt": "^2.0.0",
     "nuxt-ts": "^2.8.1",

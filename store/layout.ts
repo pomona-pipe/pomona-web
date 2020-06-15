@@ -1,6 +1,5 @@
 // TODO: create types for api response data/payloads
-
-import { Prismic } from '~/shims'
+import { IPrismic } from '~/shims'
 
 interface IState {
   mobileDrawer: boolean
@@ -22,7 +21,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async getMainNavigation({ commit }: { commit: any }, $prismic: Prismic) {
+  async getMainNavigation({ commit }: { commit: any }, $prismic: IPrismic) {
     const byMainNavigation = $prismic.predicates.at(
       'document.type',
       'main_navigation'

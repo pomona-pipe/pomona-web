@@ -49,7 +49,7 @@
 import { Component, Vue } from 'nuxt-property-decorator'
 import { Store } from 'vuex'
 import { find } from 'lodash'
-import { Prismic } from '~/shims'
+import { IPrismic } from '~/shims'
 
 const category = 'Geosynthetics'
 
@@ -61,7 +61,7 @@ export default class ProductCategoryPage extends Vue {
     )
   }
 
-  async fetch({ store, $prismic }: { store: Store<any>; $prismic: Prismic }) {
+  async fetch({ store, $prismic }: { store: Store<any>; $prismic: IPrismic }) {
     const productsExist = find(store.state.products.products, [
       'product_category',
       category

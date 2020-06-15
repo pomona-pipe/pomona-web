@@ -1,6 +1,6 @@
 // TODO: create types for api response data/payloads
 
-import { Prismic } from '~/shims'
+import { IPrismic } from '~/shims'
 
 interface IState {
   productCategories: object[]
@@ -21,7 +21,7 @@ export const mutations = {
   }
 }
 export const actions = {
-  async getProductCategories({ commit }: { commit: any }, $prismic: Prismic) {
+  async getProductCategories({ commit }: { commit: any }, $prismic: IPrismic) {
     const byCategories = $prismic.predicates.at(
       'document.type',
       'product_categories'
@@ -34,7 +34,7 @@ export const actions = {
   },
   async getProductsByCategory(
     { commit }: { commit: any },
-    { $prismic, category }: { $prismic: Prismic; category: string }
+    { $prismic, category }: { $prismic: IPrismic; category: string }
   ) {
     const byCategory = $prismic.predicates.at(
       'my.products.product_category',
