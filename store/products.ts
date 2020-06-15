@@ -1,0 +1,49 @@
+// TODO: create types for api response data/payloads
+
+import { Prismic } from '~/shims'
+
+interface IState {
+  productCategories: object[]
+  products: object[]
+}
+
+export const state = () => ({
+  productCategories: [],
+  products: []
+})
+
+export const mutations = {
+  setProductCategories(state: IState, payload: object[]) {
+    state.productCategories = payload
+  },
+  addProduct(state: IState, payload: object[]) {
+    state.products = state.products.concat(payload)
+  }
+}
+export const actions = {
+  async getProductCategories({ commit }: { commit: any }, $prismic: Prismic) {
+    const byCategories = $prismic.predicates.at(
+      'document.type',
+      'product_categories'
+    )
+    const productCategories = await $prismic.api.query(byCategories, {})
+    commit(
+      'setProductCategories',
+      productCategories.results.map((result) => result.data)
+    )
+  },
+  async getProductsByCategory(
+    { commit }: { commit: any },
+    { $prismic, category }: { $prismic: Prismic; category: string }
+  ) {
+    const byCategory = $prismic.predicates.at(
+      'my.products.product_category',
+      category
+    )
+    const product = await $prismic.api.query(byCategory, {})
+    commit(
+      'addProduct',
+      product.results.map((result) => result.data)
+    )
+  }
+}

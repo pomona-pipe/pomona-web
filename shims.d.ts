@@ -3,6 +3,7 @@
   https://github.com/prismicio/prismic-vue/issues/5
   more details about $prismic can be found at ./node_modules/prismic-vue/src/index.js
 */
+// TODO: review VuePrismic interface - many discrepancies between type defs and actual usage
 import { getApi } from 'prismic-javascript'
 import { DefaultClient } from 'prismic-javascript/d.ts/client'
 
@@ -61,7 +62,8 @@ interface VuePrismic {
   endpoint: string
   linkResolver: (doc: any) => string
   htmlSerializer: HTMLSerializer<string>
-  client: DefaultClient
+  // replaced client with api
+  api: DefaultClient
   // add predicates
   predicates: {
     at(
