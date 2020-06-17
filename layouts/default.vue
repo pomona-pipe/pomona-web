@@ -100,12 +100,15 @@ import { IPrismic } from '~/shims'
 })
 export default class DefaultLayout extends Vue {
   async middleware({
+    route,
     store,
     $prismic
   }: {
+    route: any
     store: Store<any>
     $prismic: IPrismic
   }) {
+    store.commit('layout/setPageName', route.path)
     await store.dispatch('layout/getMainNavigation', $prismic)
   }
 }

@@ -1,5 +1,6 @@
 // shim for $prismic on Vue prototype - injected by prismic-vue
 import ResolvedApi from 'prismic-javascript/d.ts/ResolvedApi'
+export { Document as IPrismicDocument } from 'prismic-javascript/d.ts/documents'
 
 export default interface IPrismic {
   api: ResolvedApi
