@@ -16,8 +16,8 @@ export const mutations = {
   setProductCategories(state: IState, payload: object[]) {
     state.productCategories = payload
   },
-  addProduct(state: IState, payload: object[]) {
-    state.products = state.products.concat(payload)
+  addProduct(state: IState, payload: object) {
+    state.products.push(payload)
   }
 }
 export const actions = {
