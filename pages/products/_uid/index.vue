@@ -4,7 +4,7 @@
       <v-container>
         <!-- check product categories exists -->
         <div>
-          <h1>This is the Pipe page</h1>
+          <h1>This is the Bridges And Structures page</h1>
         </div>
         <v-layout
           v-if="products.length > 0"
@@ -51,17 +51,36 @@ import { Store } from 'vuex'
 import { find } from 'lodash'
 import { IPrismic } from '~/shims'
 
-const category = 'Pipe'
+type categoryPage =
+  'bridges-and-structures' |
+  'pipe' |
+  'stormwater-management' |
+  'geosynthetics' |
+  'masonry' |
+  'other-products'
+
+const pageCategoriesMap = {
+  'bridges-and-structures': 'Bridges & Structures',
+  'pipe': 'Pipe',
+  'stormwater-management': 'Stormwater Management',
+  'geosynthetics': 'Geosynthetics',
+  'masonry': 'Masonry',
+  'other-products': 'Other Products'
+}
 
 @Component({})
 export default class ProductCategoryPage extends Vue {
   get products() {
+    const pageName: categoryPage = this.$store.state.layout.pageName
+    const category = pageCategoriesMap[pageName]
     return this.$store.state.products.products.filter(
       (product: any) => product.product_category === category
     )
   }
 
-  async fetch({ store, $prismic }: { store: Store<any>; $prismic: IPrismic }) {
+  async fetch({ store, $prismic, error }: { store: Store<any>; $prismic: IPrismic; error: any }) {
+    const pageName: categoryPage = store.state.layout.pageName
+    const category = pageCategoriesMap[pageName]
     const productsExist = find(store.state.products.products, [
       'product_category',
       category
