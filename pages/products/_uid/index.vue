@@ -51,22 +51,16 @@ import { Store } from 'vuex'
 import { find } from 'lodash'
 import { IPrismic } from '~/shims'
 
-type categoryPage =
-  'bridges-and-structures' |
-  'pipe' |
-  'stormwater-management' |
-  'geosynthetics' |
-  'masonry' |
-  'other-products'
-
 const pageCategoriesMap = {
   'bridges-and-structures': 'Bridges & Structures',
-  'pipe': 'Pipe',
+  pipe: 'Pipe',
   'stormwater-management': 'Stormwater Management',
-  'geosynthetics': 'Geosynthetics',
-  'masonry': 'Masonry',
+  geosynthetics: 'Geosynthetics',
+  masonry: 'Masonry',
   'other-products': 'Other Products'
 }
+
+type categoryPage = keyof typeof pageCategoriesMap
 
 @Component({})
 export default class ProductCategoryPage extends Vue {
@@ -78,7 +72,7 @@ export default class ProductCategoryPage extends Vue {
     )
   }
 
-  async fetch({ store, $prismic, error }: { store: Store<any>; $prismic: IPrismic; error: any }) {
+  async fetch({ store, $prismic }: { store: Store<any>; $prismic: IPrismic }) {
     const pageName: categoryPage = store.state.layout.pageName
     const category = pageCategoriesMap[pageName]
     const productsExist = find(store.state.products.products, [
