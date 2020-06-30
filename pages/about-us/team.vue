@@ -2,7 +2,7 @@
   <v-layout>
     <v-flex>
       <v-container>
-          <h1>This is the About Us page</h1>
+          <h1>This is the team page</h1>
         
        
       </v-container>
