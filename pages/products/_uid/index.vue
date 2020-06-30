@@ -17,21 +17,22 @@
           <!-- template for product category cards -->
           <v-container fluid grid-list-sm>
             <v-layout row wrap>
-              <v-container v-for="product in products" :key="product.id">
+              <v-container v-for="product in products" :key="product.data.id">
                 <v-flex xs12 md6 lg3>
                   <v-hover v-slot:default="{ hover }" open-delay="200">
                     <v-card
+                      :to="`./${pageName}/${product.uid}`"
                       :elevation="hover ? 16 : 2"
                       class="mx-auto"
                       max-width="344"
                     >
                       <v-img
-                        :src="product.cover_image.url"
+                        :src="product.data.cover_image.url"
                         height="200px"
                       ></v-img>
 
                       <v-card-title>
-                        {{ product.name[0].text }}
+                        {{ product.data.name[0].text }}
                       </v-card-title>
                     </v-card>
                   </v-hover>
@@ -47,7 +48,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { Store } from 'vuex'
+import { Store, mapState } from 'vuex'
 import { find } from 'lodash'
 import { IPrismic } from '~/shims'
 
@@ -62,23 +63,24 @@ const pageCategoriesMap = {
 
 type categoryPage = keyof typeof pageCategoriesMap
 
-@Component({})
+@Component({
+  computed: {
+    ...mapState('layout', ['pageName'])
+  }
+})
 export default class ProductCategoryPage extends Vue {
   get products() {
     const pageName: categoryPage = this.$store.state.layout.pageName
     const category = pageCategoriesMap[pageName]
     return this.$store.state.products.products.filter(
-      (product: any) => product.product_category === category
+      (product: any) => product.data.product_category === category
     )
   }
 
   async fetch({ store, $prismic }: { store: Store<any>; $prismic: IPrismic }) {
     const pageName: categoryPage = store.state.layout.pageName
     const category = pageCategoriesMap[pageName]
-    const productsExist = find(store.state.products.products, [
-      'product_category',
-      category
-    ])
+    const productsExist = find(store.state.products.products, (product) => product.data.product_category === category )
     if (productsExist) return
     await store.dispatch('products/getProductsByCategory', {
       $prismic,

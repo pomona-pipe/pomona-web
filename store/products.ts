@@ -43,7 +43,7 @@ export const actions = {
     const product = await $prismic.api.query(byCategory, {})
     commit(
       'addProduct',
-      product.results.map((result) => result.data)
+      product.results.map((result) => result)
     )
   }
 }
