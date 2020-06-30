@@ -6,38 +6,25 @@
         <div>
           <h1>This is the Bridges And Structures page</h1>
         </div>
-        <v-layout
-          v-if="products.length > 0"
-          row
-          wrap
-          column
-          justify-center
-          align-center
-        >
+        <v-layout v-if="products.length > 0" row wrap column justify-center align-center>
           <!-- template for product category cards -->
           <v-container fluid grid-list-sm>
-            <v-layout row wrap>
-              <v-container v-for="product in products" :key="product.data.id">
-                <v-flex xs12 md6 lg3>
-                  <v-hover v-slot:default="{ hover }" open-delay="200">
-                    <v-card
-                      :to="`./${pageName}/${product.uid}`"
-                      :elevation="hover ? 16 : 2"
-                      class="mx-auto"
-                      max-width="344"
-                    >
-                      <v-img
-                        :src="product.data.cover_image.url"
-                        height="200px"
-                      ></v-img>
+            <v-layout row wrap class="align-stretch">
+              <v-flex v-for="product in products" :key="product.data.id" xs12 md6 lg3 >
+                <v-hover v-slot:default="{ hover }" open-delay="200">
+                  <v-card
+                    :to="`./${pageName}/${product.uid}`"
+                    :elevation="hover ? 16 : 2"
+                    class="mx-auto"
+                    max-width="344"
+                    height="100%"
+                  >
+                    <v-img :src="product.data.cover_image.url" height="200px"></v-img>
 
-                      <v-card-title>
-                        {{ product.data.name[0].text }}
-                      </v-card-title>
-                    </v-card>
-                  </v-hover>
-                </v-flex>
-              </v-container>
+                    <v-card-title>{{ product.data.name[0].text }}</v-card-title>
+                  </v-card>
+                </v-hover>
+              </v-flex>
             </v-layout>
           </v-container>
         </v-layout>
@@ -80,7 +67,10 @@ export default class ProductCategoryPage extends Vue {
   async fetch({ store, $prismic }: { store: Store<any>; $prismic: IPrismic }) {
     const pageName: categoryPage = store.state.layout.pageName
     const category = pageCategoriesMap[pageName]
-    const productsExist = find(store.state.products.products, (product) => product.data.product_category === category )
+    const productsExist = find(
+      store.state.products.products,
+      (product) => product.data.product_category === category
+    )
     if (productsExist) return
     await store.dispatch('products/getProductsByCategory', {
       $prismic,

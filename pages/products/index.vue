@@ -4,7 +4,7 @@
       <v-container>
         <!-- check product categories exists -->
         <div>
-          <h1>This is the Products page</h1>
+          <h1>This is the All Product Categories page</h1>
         </div>
         <v-layout
           v-if="productCategories.length > 0"
@@ -26,14 +26,15 @@
               >
                 <v-hover v-slot:default="{ hover }" open-delay="200">
                   <v-card
+                    :to="`/products/${cat.uid}`"
                     :elevation="hover ? 16 : 2"
                     class="mx-auto"
                     max-width="344"
                   >
-                    <v-img :src="cat.category_image.url" height="200px"></v-img>
+                    <v-img :src="cat.data.category_image.url" height="200px"></v-img>
 
                     <v-card-title>{{
-                      cat.category_title[0].text
+                      cat.data.category_title[0].text
                     }}</v-card-title>
                   </v-card>
                 </v-hover>

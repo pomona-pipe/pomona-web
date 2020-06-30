@@ -29,7 +29,7 @@ export const actions = {
     const productCategories = await $prismic.api.query(byCategories, {})
     commit(
       'setProductCategories',
-      productCategories.results.map((result) => result.data)
+      productCategories.results.map((result) => result)
     )
   },
   async getProductsByCategory(

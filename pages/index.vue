@@ -1,7 +1,9 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 md6 lg3>
+      
       <v-container>
+        <h1>This is the HOME page</h1>
         <!-- check product categories exists -->
         <v-layout
           v-if="productCategories.length > 0"
@@ -13,7 +15,7 @@
         >
           <!-- template for product category cards -->
           <v-container fluid grid-list-lg>
-            <v-layout row wrap>
+            <v-layout row wrap class="align-stretch">
               <v-flex
                 v-for="cat in productCategories"
                 :key="cat.id"
@@ -23,14 +25,16 @@
               >
                 <v-hover v-slot:default="{ hover }" open-delay="200">
                   <v-card
+                    :to="`/products/${cat.uid}`"
                     :elevation="hover ? 16 : 2"
                     class="mx-auto"
                     max-width="344"
+                    height="100%"
                   >
-                    <v-img :src="cat.category_image.url" height="200px"></v-img>
+                    <v-img :src="cat.data.category_image.url" height="200px"></v-img>
 
                     <v-card-title>{{
-                      cat.category_title[0].text
+                      cat.data.category_title[0].text
                     }}</v-card-title>
                   </v-card>
                 </v-hover>
