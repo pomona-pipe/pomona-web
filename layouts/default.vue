@@ -2,13 +2,14 @@
   <v-app>
     <v-app-bar app fixed color="#303030" dark shrink-on-scroll dense>
       <img src="~/assets/logo_xlarge.png" class="pomona_logo" />
-      <div>
+      <v-flex class="d-flex justify-center">
         <v-menu
           v-for="navOption in mainNavigation"
           :key="navOption.primary.link.id"
           open-on-hover
           bottom
           offset-y
+          
         >
           <!-- non-repeat -->
           <template v-slot:activator="{ on }">
@@ -41,7 +42,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
-      </div>
+      </v-flex>
       <v-spacer></v-spacer>
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
