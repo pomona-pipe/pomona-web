@@ -26,7 +26,7 @@ export const actions = {
       'document.type',
       'product_categories'
     )
-    const productCategories = await $prismic.api.query(byCategories, {})
+    const productCategories = await $prismic.api.query(byCategories, {orderings: '[my.product_categories.order_number]'})
     commit(
       'setProductCategories',
       productCategories.results.map((result) => result)
