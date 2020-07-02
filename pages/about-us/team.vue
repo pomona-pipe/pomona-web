@@ -3,13 +3,12 @@
     <v-layout>
       <v-flex>
         <v-container>
-          <h1>This is the team page</h1>
           <v-row cols="12">
             <v-col sm="6">
-              <v-img :src="team[0].data.main_image.url"></v-img>
+              <h1>{{ team[0].data.main_title[0].text }}</h1>
             </v-col>
             <v-col sm="6">
-              <h1>{{ team[0].data.main_title[0].text }}</h1>
+              <v-img :src="team[0].data.main_image.url"></v-img>
             </v-col>
           </v-row>
         </v-container>
@@ -26,6 +25,7 @@
                 <v-card-title>{{ employee.data.name[0].text }}</v-card-title>
                 <v-card-text>
                   <div>{{ employee.data.job_title[0].text }}</div>
+                  <div v-if="employee.data.territory.length > 0">{{ employee.data.territory[0].text }}</div>
                   <div>{{ employee.data.email_address[0].text }}</div>
                 </v-card-text>
               </v-card>

@@ -21,7 +21,7 @@ export const actions = {
       'document.type',
       'employees'
     )
-    const employees = await $prismic.api.query(byEmployees, {})
+    const employees = await $prismic.api.query(byEmployees, {orderings: '[my.employees.order_number]'})
     commit('setEmployees', employees.results.map((result) => result))
   }
 
