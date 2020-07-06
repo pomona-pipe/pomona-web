@@ -26,7 +26,7 @@
                 <v-card-text>
                   <div>{{ employee.data.job_title[0].text }}</div>
                   <div v-if="employee.data.territory.length > 0">{{ employee.data.territory[0].text }}</div>
-                  <div>{{ employee.data.email_address[0].text }}</div>
+                  <a :href="employee.data.email_address_link.url">{{ employee.data.email_address[0].text }}</a>
                 </v-card-text>
               </v-card>
             </v-hover>
