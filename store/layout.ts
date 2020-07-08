@@ -18,6 +18,9 @@ export const mutations = {
     const pageName = payload.split('/').slice(-1)[0] || 'home'
     state.pageName = pageName
   },
+  setMobileDrawer(state: IState, value: boolean) {
+    state.mobileDrawer = value
+  },
   toggleMobileDrawer(state: IState) {
     state.mobileDrawer = !state.mobileDrawer
   },

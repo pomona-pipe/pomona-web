@@ -2,58 +2,80 @@
   <v-app>
     <v-app-bar app fixed color="#303030" dark hide-on-scroll dense prominent>
       <div class="d-flex justify-space-between align-center flex-no-wrap appBarContent">
+        <!-- Mobile Hamburger Menu Button -->
+        <v-app-bar-nav-icon class="hidden-md-and-up" @click.stop="mobileDrawer = !mobileDrawer"></v-app-bar-nav-icon>
+        <!-- Company Logo -->
         <div>
           <nuxt-link to="/">
             <img src="~/assets/logo_xlarge.png" class="pomona_logo" />
           </nuxt-link>
         </div>
-        <div>
-          <v-menu
-            v-for="navOption in mainNavigation"
-            :key="navOption.primary.link.id"
-            open-on-hover
-            bottom
-            offset-y
-          >
-            <!-- non-repeat -->
-            <template v-slot:activator="{ on }">
-              <v-btn
-                :nuxt="true"
-                :to="{ path: `/${navOption.primary.link.uid}` }"
-                color="#303030"
-                dark
-                v-on="on"
-                height="48px"
-              >{{ navOption.primary.label[0].text }}</v-btn>
-            </template>
+        <!-- Desktop Navigation Menu -->
+        <div class="d-flex">
+          <div class="hidden-sm-and-down">
+            <v-menu
+              v-for="navOption in mainNavigation"
+              :key="navOption.primary.link.id"
+              open-on-hover
+              bottom
+              offset-y
+            >
+              <!-- Non-repeat Section -->
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  :nuxt="true"
+                  :to="{ path: `/${navOption.primary.link.uid}` }"
+                  color="#303030"
+                  dark
+                  v-on="on"
+                  height="48px"
+                >{{ navOption.primary.label[0].text }}</v-btn>
+              </template>
 
-            <!-- repeat -->
-            <v-list v-if="navOption.items && navOption.items.length > 0">
-              <v-list-item
-                v-for="subNavOption in navOption.items"
-                :key="subNavOption.sub_nav_link.id"
-                :nuxt="true"
-                :to="{
+              <!-- Repeat Section -->
+              <v-list v-if="navOption.items && navOption.items.length > 0">
+                <v-list-item
+                  v-for="subNavOption in navOption.items"
+                  :key="subNavOption.sub_nav_link.id"
+                  :nuxt="true"
+                  :to="{
                 path: `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}`
               }"
-                text
-                rounded
-                class="my-2"
-              >
-                <v-list-item-title>
-                  {{
-                  subNavOption.sub_nav_link_label[0].text
-                  }}
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
+                  text
+                  rounded
+                  class="my-2"
+                >
+                  <v-list-item-title>
+                    {{
+                    subNavOption.sub_nav_link_label[0].text
+                    }}
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </div>
+          <!-- Search Icon -->
           <v-btn icon>
             <v-icon>mdi-magnify</v-icon>
           </v-btn>
         </div>
       </div>
     </v-app-bar>
+    <!-- Mobile Navigation Drawer -->
+    <v-navigation-drawer v-model="mobileDrawer" absolute temporary>
+      <v-list nav dense>
+        <v-list-item-group  active-class="deep-purple--text text--accent-4">
+          <v-list-item to="/">
+            <v-list-item-icon>
+              <v-icon>mdi-home</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item>
+
+          
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
     <v-content>
       <v-container fluid>
         <nuxt />
@@ -80,7 +102,15 @@ import { IPrismic } from '~/shims'
 @Component({
   components: {},
   computed: {
-    ...mapState('layout', ['mainNavigation', 'navLinks'])
+    ...mapState('layout', ['mainNavigation', 'navLinks']),
+    mobileDrawer: {
+      get() {
+        return this.$store.state.layout.mobileDrawer
+      },
+      set(value) {
+        this.$store.commit('layout/setMobileDrawer', value)
+      }
+    }
   }
 })
 export default class DefaultLayout extends Vue {
