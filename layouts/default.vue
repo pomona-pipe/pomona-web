@@ -65,25 +65,23 @@
     <v-navigation-drawer v-model="mobileDrawer" absolute temporary>
       <v-list nav dense>
         <v-list-item-group active-class="deep-purple--text text--accent-4">
-          <v-list-item to="/">
+          <v-list-item two-line to="/">
             <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Home</v-list-item-title>
+            <v-list-item >Home</v-list-item>
           </v-list-item>
         </v-list-item-group>
         <v-list-group
           v-for="navOption in mainNavigation"
           :key="navOption.primary.link.id"
-          no-action
-          value="true"
           active-class="deep-purple--text text--accent-4"
+          
         >
           <!-- title -->
           <template v-slot:activator>
-            <v-list-item-title :nuxt="true">{{ navOption.primary.label[0].text }}</v-list-item-title>
+            <v-list-item two-line :nuxt="true">{{ navOption.primary.label[0].text }}</v-list-item>
           </template>
-
           <v-list-item
             v-for="subNavOption in navOption.items"
             :key="subNavOption.sub_nav_link.id"
@@ -92,6 +90,7 @@
                 path: `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}`
               }"
             active-class="deep-purple--text text--accent-4"
+            two-line
             
           >
             <v-list-item-title>{{ subNavOption.sub_nav_link_label[0].text }}</v-list-item-title>
