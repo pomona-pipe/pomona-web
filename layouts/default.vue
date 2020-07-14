@@ -69,7 +69,7 @@
             <v-list-item-icon>
               <v-icon x-large>mdi-home</v-icon>
             </v-list-item-icon>
-            <v-list-item>Home</v-list-item>
+            Home
           </v-list-item>
         </v-list-item-group>
         <v-list-group
