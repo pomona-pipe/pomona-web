@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app v-resize="checkIsMobile">
     <v-app-bar app fixed color="#303030" dark hide-on-scroll dense prominent>
       <div class="d-flex justify-space-between align-center flex-no-wrap appBarContent">
         <!-- Mobile Hamburger Menu Button -->
@@ -38,12 +38,9 @@
                   v-for="subNavOption in navOption.items"
                   :key="subNavOption.sub_nav_link.id"
                   :nuxt="true"
-                  :to="{
-                path: `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}`
-              }"
+                  :to="{ path: navOption.primary.link.uid === subNavOption.sub_nav_link.uid ? `/${navOption.primary.link.uid}` : `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}` }"
                   text
                   rounded
-                  class="my-2"
                 >
                   <v-list-item-title>
                     {{
@@ -61,15 +58,16 @@
         </div>
       </div>
     </v-app-bar>
+    <!-- Workaround for z-index of drawer overlay -->
+    <v-overlay :value="mobileDrawer"></v-overlay>
     <!-- Mobile Navigation Drawer -->
-    <v-navigation-drawer v-model="mobileDrawer" absolute temporary>
+    <v-navigation-drawer v-model="mobileDrawer" app>
       <v-list nav dense>
-        <v-list-item-group >
+        <v-list-item-group>
           <v-list-item two-line to="/" active-class="deep-purple--text text--accent-4">
             <v-list-item-icon>
               <v-icon x-large>mdi-home</v-icon>
-            </v-list-item-icon>
-            Home
+            </v-list-item-icon>Home
           </v-list-item>
         </v-list-item-group>
         <v-list-group
@@ -87,17 +85,17 @@
             :key="subNavOption.sub_nav_link.id"
             :nuxt="true"
             :to="{
-                path: `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}`
+                path: navOption.primary.link.uid === subNavOption.sub_nav_link.uid ? `/${navOption.primary.link.uid}` : `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}`
               }"
             active-class="deep-purple--text text--accent-4"
             two-line
-            
           >
             <v-list-item-subtitle>{{ subNavOption.sub_nav_link_label[0].text }}</v-list-item-subtitle>
           </v-list-item>
         </v-list-group>
       </v-list>
     </v-navigation-drawer>
+    <!-- Application Content -->
     <v-content>
       <v-container fluid>
         <nuxt />
@@ -118,13 +116,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { Store, mapState } from 'vuex'
+import { Store, mapState, mapMutations } from 'vuex'
 import { IPrismic } from '~/shims'
 
 @Component({
   components: {},
   computed: {
-    ...mapState('layout', ['mainNavigation', 'navLinks']),
+    ...mapState('layout', ['mainNavigation', 'navLinks', 'isMobile']),
     mobileDrawer: {
       get() {
         return this.$store.state.layout.mobileDrawer
@@ -136,6 +134,14 @@ import { IPrismic } from '~/shims'
   }
 })
 export default class DefaultLayout extends Vue {
+  checkIsMobile () {
+    const isMobile = window.innerWidth < this.$vuetify.breakpoint.thresholds.sm;
+    if (!isMobile) {
+      this.$store.commit('layout/setMobileDrawer', false)
+    }
+    this.$store.commit('layout/setIsMobile', isMobile)
+
+  }
   async middleware({
     route,
     store,
