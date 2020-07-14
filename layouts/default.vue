@@ -64,24 +64,24 @@
     <!-- Mobile Navigation Drawer -->
     <v-navigation-drawer v-model="mobileDrawer" absolute temporary>
       <v-list nav dense>
-        <v-list-item-group active-class="deep-purple--text text--accent-4">
-          <v-list-item two-line to="/">
+        <v-list-item-group >
+          <v-list-item two-line to="/" active-class="deep-purple--text text--accent-4">
             <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
+              <v-icon x-large>mdi-home</v-icon>
             </v-list-item-icon>
-            <v-list-item >Home</v-list-item>
+            <v-list-item>Home</v-list-item>
           </v-list-item>
         </v-list-item-group>
         <v-list-group
           v-for="navOption in mainNavigation"
           :key="navOption.primary.link.id"
           active-class="deep-purple--text text--accent-4"
-          
         >
-          <!-- title -->
+          <!-- Dropdown title -->
           <template v-slot:activator>
             <v-list-item two-line :nuxt="true">{{ navOption.primary.label[0].text }}</v-list-item>
           </template>
+          <!-- Sub Nav Options -->
           <v-list-item
             v-for="subNavOption in navOption.items"
             :key="subNavOption.sub_nav_link.id"
@@ -93,7 +93,7 @@
             two-line
             
           >
-            <v-list-item-title>{{ subNavOption.sub_nav_link_label[0].text }}</v-list-item-title>
+            <v-list-item-subtitle>{{ subNavOption.sub_nav_link_label[0].text }}</v-list-item-subtitle>
           </v-list-item>
         </v-list-group>
       </v-list>
