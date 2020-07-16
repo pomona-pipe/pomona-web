@@ -10,7 +10,7 @@
           <!-- template for product category cards -->
           <v-container fluid grid-list-sm>
             <v-layout row wrap class="align-stretch">
-              <v-flex v-for="product in products" :key="product.data.id" xs12 md6 lg3 >
+              <v-flex v-for="product in products" :key="product.data.id" xs12 md6 lg3>
                 <v-hover v-slot:default="{ hover }" open-delay="200">
                   <v-card
                     :to="`./${pageName}/${product.uid}`"
@@ -41,9 +41,11 @@ import { IPrismic } from '~/shims'
 
 const pageCategoriesMap = {
   'bridges-and-structures': 'Bridges & Structures',
+  'headwall-systems': 'Headwall Systems',
   pipe: 'Pipe',
   'stormwater-management': 'Stormwater Management',
-  geosynthetics: 'Geosynthetics',
+  'water-control-structures': 'Water Control Structures',
+  'slip lining': 'Slip Lining',
   masonry: 'Masonry',
   'other-products': 'Other Products'
 }
