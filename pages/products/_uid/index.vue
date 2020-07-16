@@ -45,7 +45,7 @@ const pageCategoriesMap = {
   pipe: 'Pipe',
   'stormwater-management': 'Stormwater Management',
   'water-control-structures': 'Water Control Structures',
-  'slip lining': 'Slip Lining',
+  'slip-lining': 'Slip Lining',
   masonry: 'Masonry',
   'other-products': 'Other Products'
 }
