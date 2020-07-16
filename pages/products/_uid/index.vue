@@ -4,7 +4,7 @@
       <v-container>
         <!-- check product categories exists -->
         <div>
-          <h1>This is the Bridges And Structures page</h1>
+          <h1>{{ pageName }}</h1>
         </div>
         <v-layout v-if="products.length > 0" row wrap column justify-center align-center>
           <!-- template for product category cards -->
