@@ -41,6 +41,7 @@
                   :to="{ path: navOption.primary.link.uid === subNavOption.sub_nav_link.uid ? `/${navOption.primary.link.uid}` : `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}` }"
                   text
                   rounded
+                  active-class="deep-purple--text text--accent-4"
                 >
                   <v-list-item-title>
                     {{
@@ -61,7 +62,7 @@
     <!-- Workaround for z-index of drawer overlay -->
     <v-overlay :value="mobileDrawer"></v-overlay>
     <!-- Mobile Navigation Drawer -->
-    <v-navigation-drawer v-model="mobileDrawer" app>
+    <v-navigation-drawer v-model="mobileDrawer" app disable-resize-watcher>
       <v-list nav dense>
         <v-list-item-group>
           <v-list-item two-line to="/" active-class="deep-purple--text text--accent-4">
