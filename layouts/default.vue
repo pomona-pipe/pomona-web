@@ -1,5 +1,5 @@
 <template>
-  <v-app v-resize="checkIsMobile">
+  <v-app v-resize="checkIsMobile" v-bind:class="{ noScroll: mobileDrawer}">
     <v-app-bar app fixed color="#303030" dark hide-on-scroll dense prominent>
       <div class="d-flex justify-space-between align-center flex-no-wrap appBarContent">
         <!-- Mobile Hamburger Menu Button -->
@@ -111,6 +111,10 @@
 .appBarContent {
   width: 100%;
   height: 100%;
+}
+.noScroll {
+  height: 100vh;
+  overflow-y: hidden;
 }
 </style>
 
