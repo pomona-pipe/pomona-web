@@ -1,11 +1,10 @@
 <template>
-  <v-layout>
-    <v-flex>
+  <v-layout column justify-center align-center>
+    <v-flex xs12 sm6 md4 lg3 xl3>
+      
       <v-container>
+        <h1>All Product Categories</h1>
         <!-- check product categories exists -->
-        <div>
-          <h1>This is the All Product Categories page</h1>
-        </div>
         <v-layout
           v-if="productCategories.length > 0"
           row
@@ -15,14 +14,16 @@
           align-center
         >
           <!-- template for product category cards -->
-          <v-container fluid grid-list-sm>
-            <v-layout row wrap>
+          <v-container fluid grid-list-lg>
+            <v-layout row wrap class="align-stretch">
               <v-flex
                 v-for="cat in productCategories"
                 :key="cat.id"
                 xs12
-                md6
+                sm6
+                md4
                 lg3
+                xl3
               >
                 <v-hover v-slot:default="{ hover }" open-delay="200">
                   <v-card
@@ -30,6 +31,7 @@
                     :elevation="hover ? 16 : 2"
                     class="mx-auto"
                     max-width="344"
+                    height="100%"
                   >
                     <v-img :src="cat.data.category_image.url" height="200px"></v-img>
 

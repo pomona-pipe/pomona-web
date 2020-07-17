@@ -1,9 +1,9 @@
 <template>
   <v-layout column justify-center align-center>
-    <v-flex xs12 md6 lg3>
+    <v-flex xs12 sm6 md4 lg3 xl3>
       
       <v-container>
-        <h1>This is the HOME page</h1>
+        <h1>Home</h1>
         <!-- check product categories exists -->
         <v-layout
           v-if="productCategories.length > 0"
@@ -20,8 +20,10 @@
                 v-for="cat in productCategories"
                 :key="cat.id"
                 xs12
-                md6
+                sm6
+                md4
                 lg3
+                xl3
               >
                 <v-hover v-slot:default="{ hover }" open-delay="200">
                   <v-card
