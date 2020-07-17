@@ -116,8 +116,9 @@
   height: 100%;
 }
 .noScroll {
-  height: 100vh;
-  overflow-y: hidden;
+  position: fixed;
+  top: 0px;
+  left: 0px;
 }
 </style>
 
