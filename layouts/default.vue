@@ -33,7 +33,7 @@
               </template>
 
               <!-- Repeat Section -->
-              <v-list v-if="navOption.items && navOption.items.length > 0">
+              <v-list>
                 <v-list-item
                   v-for="subNavOption in navOption.items"
                   :key="subNavOption.sub_nav_link.id"
@@ -42,6 +42,7 @@
                   text
                   rounded
                   active-class="deep-purple--text text--accent-4"
+                  exact 
                 >
                   <v-list-item-title>
                     {{
@@ -90,6 +91,7 @@
               }"
             active-class="deep-purple--text text--accent-4"
             two-line
+            exact
           >
             <v-list-item-subtitle>{{ subNavOption.sub_nav_link_label[0].text }}</v-list-item-subtitle>
           </v-list-item>
