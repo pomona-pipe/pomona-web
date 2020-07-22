@@ -1,9 +1,23 @@
 <template>
-  <v-app v-resize="checkIsMobile" :class="{'no-scroll': mobileDrawer}">
-    <v-app-bar app fixed color="#303030" dark hide-on-scroll scroll-threshold="100" dense prominent>
-      <div class="d-flex justify-space-between align-center flex-no-wrap appBarContent">
+  <v-app v-resize="checkIsMobile" :class="{ 'no-scroll': mobileDrawer }">
+    <v-app-bar
+      app
+      fixed
+      color="#303030"
+      dark
+      hide-on-scroll
+      scroll-threshold="100"
+      dense
+      prominent
+    >
+      <div
+        class="d-flex justify-space-between align-center flex-no-wrap appBarContent"
+      >
         <!-- Mobile Hamburger Menu Button -->
-        <v-app-bar-nav-icon class="hidden-md-and-up" @click.stop="mobileDrawer = !mobileDrawer"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon
+          class="hidden-md-and-up"
+          @click.stop="mobileDrawer = !mobileDrawer"
+        ></v-app-bar-nav-icon>
         <!-- Company Logo -->
         <div>
           <nuxt-link to="/">
@@ -29,7 +43,8 @@
                   dark
                   v-on="on"
                   height="48px"
-                >{{ navOption.primary.label[0].text }}</v-btn>
+                  >{{ navOption.primary.label[0].text }}</v-btn
+                >
               </template>
 
               <!-- Repeat Section -->
@@ -38,16 +53,20 @@
                   v-for="subNavOption in navOption.items"
                   :key="subNavOption.sub_nav_link.id"
                   :nuxt="true"
-                  :to="{ path: navOption.primary.link.uid === subNavOption.sub_nav_link.uid ? `/${navOption.primary.link.uid}` : `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}` }"
+                  :to="{
+                    path:
+                      navOption.primary.link.uid ===
+                      subNavOption.sub_nav_link.uid
+                        ? `/${navOption.primary.link.uid}`
+                        : `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}`
+                  }"
                   text
                   rounded
                   active-class="deep-purple--text text--accent-4"
                   exact
                 >
                   <v-list-item-title>
-                    {{
-                    subNavOption.sub_nav_link_label[0].text
-                    }}
+                    {{ subNavOption.sub_nav_link_label[0].text }}
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -63,13 +82,25 @@
     <!-- Workaround for z-index of drawer overlay -->
     <v-overlay :value="mobileDrawer"></v-overlay>
     <!-- Mobile Navigation Drawer -->
-    <v-navigation-drawer v-model="mobileDrawer" app fixed hide-overlay disable-resize-watcher class="pb-16">
+    <v-navigation-drawer
+      v-model="mobileDrawer"
+      app
+      fixed
+      hide-overlay
+      disable-resize-watcher
+      class="pb-16"
+    >
       <v-list nav dense>
         <v-list-item-group>
-          <v-list-item two-line to="/" active-class="deep-purple--text text--accent-4">
-            <v-list-item-icon>
+          <v-list-item
+            two-line
+            to="/"
+            active-class="deep-purple--text text--accent-4"
+          >
+            <v-list-item-icon class="mr-4 align-self-center">
               <v-icon x-large>mdi-home</v-icon>
-            </v-list-item-icon>Home
+            </v-list-item-icon>
+            <v-list-item-content>Home</v-list-item-content>
           </v-list-item>
         </v-list-item-group>
         <v-list-group
@@ -79,7 +110,9 @@
         >
           <!-- Dropdown title -->
           <template v-slot:activator>
-            <v-list-item two-line :nuxt="true">{{ navOption.primary.label[0].text }}</v-list-item>
+            <v-list-item two-line :nuxt="true">{{
+              navOption.primary.label[0].text
+            }}</v-list-item>
           </template>
           <!-- Sub Nav Options -->
           <v-list-item
@@ -87,13 +120,18 @@
             :key="subNavOption.sub_nav_link.id"
             :nuxt="true"
             :to="{
-                path: navOption.primary.link.uid === subNavOption.sub_nav_link.uid ? `/${navOption.primary.link.uid}` : `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}`
-              }"
+              path:
+                navOption.primary.link.uid === subNavOption.sub_nav_link.uid
+                  ? `/${navOption.primary.link.uid}`
+                  : `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}`
+            }"
             active-class="deep-purple--text text--accent-4"
             two-line
             exact
           >
-            <v-list-item-subtitle>{{ subNavOption.sub_nav_link_label[0].text }}</v-list-item-subtitle>
+            <v-list-item-subtitle>{{
+              subNavOption.sub_nav_link_label[0].text
+            }}</v-list-item-subtitle>
           </v-list-item>
         </v-list-group>
       </v-list>
@@ -146,13 +184,12 @@ import { IPrismic } from '~/shims'
   }
 })
 export default class DefaultLayout extends Vue {
-  checkIsMobile () {
-    const isMobile = window.innerWidth < this.$vuetify.breakpoint.thresholds.sm;
+  checkIsMobile() {
+    const isMobile = window.innerWidth < this.$vuetify.breakpoint.thresholds.sm
     if (!isMobile) {
       this.$store.commit('layout/setMobileDrawer', false)
     }
     this.$store.commit('layout/setIsMobile', isMobile)
-
   }
   async middleware({
     route,
