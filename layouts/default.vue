@@ -1,6 +1,6 @@
 <template>
-  <v-app v-resize="checkIsMobile" v-bind:class="{ noScroll: mobileDrawer}">
-    <v-app-bar app fixed color="#303030" dark hide-on-scroll scroll-off-screen scroll-threshold="100" dense prominent>
+  <v-app v-resize="checkIsMobile" :class="{'no-scroll': mobileDrawer}">
+    <v-app-bar app fixed color="#303030" dark hide-on-scroll scroll-threshold="100" dense prominent>
       <div class="d-flex justify-space-between align-center flex-no-wrap appBarContent">
         <!-- Mobile Hamburger Menu Button -->
         <v-app-bar-nav-icon class="hidden-md-and-up" @click.stop="mobileDrawer = !mobileDrawer"></v-app-bar-nav-icon>
@@ -42,7 +42,7 @@
                   text
                   rounded
                   active-class="deep-purple--text text--accent-4"
-                  exact 
+                  exact
                 >
                   <v-list-item-title>
                     {{
@@ -63,7 +63,7 @@
     <!-- Workaround for z-index of drawer overlay -->
     <v-overlay :value="mobileDrawer"></v-overlay>
     <!-- Mobile Navigation Drawer -->
-    <v-navigation-drawer v-model="mobileDrawer" app disable-resize-watcher>
+    <v-navigation-drawer v-model="mobileDrawer" app fixed hide-overlay disable-resize-watcher class="pb-16">
       <v-list nav dense>
         <v-list-item-group>
           <v-list-item two-line to="/" active-class="deep-purple--text text--accent-4">
@@ -99,11 +99,11 @@
       </v-list>
     </v-navigation-drawer>
     <!-- Application Content -->
-    <v-content>
+    <v-main>
       <v-container fluid>
         <nuxt />
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 <style lang="css" scoped>
@@ -115,10 +115,14 @@
   width: 100%;
   height: 100%;
 }
-.noScroll {
+.no-scroll {
   position: fixed;
-  top: 0px;
-  left: 0px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  overflow: hidden;
 }
 </style>
 
