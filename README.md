@@ -2,6 +2,10 @@
 
 > The Pomona Pipe Products website.
 
+> Stack: Prismic.io, Nuxt.js, Typescript, Netlify 
+               < Live version >
+-----> https://wwww.pomonasupply.com <------
+
 ## Build Setup
 
 ```bash
