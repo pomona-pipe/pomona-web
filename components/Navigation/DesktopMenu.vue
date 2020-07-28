@@ -21,7 +21,7 @@
       </template>
 
       <!-- Repeat Section -->
-      <v-list>
+      <v-list v-if="navOption.items.length > 0">
         <v-list-item
           v-for="subNavOption in navOption.items"
           :key="subNavOption.sub_nav_link.id"
