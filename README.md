@@ -4,7 +4,7 @@
 
 > Stack: Prismic.io, Nuxt.js, Typescript, Netlify 
                < Live version >
------> https://wwww.pomonasupply.com <------
+-----> https://www.pomonasupply.com <------
 
 ## Build Setup
 
