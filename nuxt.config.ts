@@ -31,7 +31,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['@plugins/vuetify.ts'],
+  plugins: ['@plugins/vuetify.ts', '@plugins/prismic-links.client.ts'],
   /*
    ** Nuxt.js dev-modules
    */
@@ -50,8 +50,8 @@ export default {
   // This is where you configure your settings for the new plugin
   prismic: {
     endpoint: 'https://pomona.cdn.prismic.io/api/v2',
-    linkResolver: '@/plugins/link-resolver',
-    htmlSerializer: '@/plugins/html-serializer'
+    linkResolver: '@/plugins/link-resolver.ts',
+    htmlSerializer: '@/plugins/html-serializer.ts'
   },
   /*
    ** Axios module configuration
