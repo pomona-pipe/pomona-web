@@ -8,6 +8,7 @@
         <nuxt />
       </v-container>
     </v-main>
+    <Footer />
   </v-app>
 </template>
 <style lang="css" scoped>
@@ -27,12 +28,15 @@ import { Component, Vue } from 'nuxt-property-decorator'
 import { Store, mapState } from 'vuex'
 import { IPrismic } from '~/shims'
 import Header from '~/components/Layout/Header.vue'
+import Footer from '~/components/Layout/Footer.vue'
 import MobileDrawer from '~/components/Navigation/MobileDrawer.vue'
+
 
 @Component({
   components: {
     Header,
-    MobileDrawer
+    MobileDrawer,
+    Footer
   },
   computed: {
     ...mapState('layout', ['mainNavigation', 'isMobile']),
@@ -64,6 +68,7 @@ export default class DefaultLayout extends Vue {
     store.commit('layout/setPageUid', route.path)
     store.commit('layout/setPageName', store.state.layout.pageUid)
     await store.dispatch('layout/getMainNavigation', $prismic)
+    await store.dispatch('layout/getFooterNavigation', $prismic)
   }
 }
 </script>
