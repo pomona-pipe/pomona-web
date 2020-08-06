@@ -22,9 +22,9 @@
 <style scoped lang="scss">
 a {
     text-decoration: none;
-    color: #BDBDBD;
+    color: #BDBDBD !important;
     &:hover {
-        color: #ffffff;
+        color: #ffffff !important;
     }
 }
 </style>

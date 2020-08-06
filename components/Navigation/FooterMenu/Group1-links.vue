@@ -9,9 +9,9 @@
 <style scoped lang="scss">
 a {
   text-decoration: none;
-  color: #bdbdbd;
+  color: #bdbdbd !important;
   &:hover {
-    color: #ffffff;
+    color: #ffffff !important;
   }
 }
 </style>
