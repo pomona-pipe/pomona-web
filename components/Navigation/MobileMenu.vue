@@ -7,7 +7,7 @@
         active-class="deep-purple--text text--accent-4"
       >
         <v-list-item-icon class="mr-4 align-self-center">
-          <v-icon x-large>mdi-home</v-icon>
+          <v-icon>{{ mdiHome }}</v-icon>
         </v-list-item-icon>
         <v-list-item-content>Home</v-list-item-content>
       </v-list-item>
@@ -68,11 +68,14 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
+import { mdiHome } from '@mdi/js'
 
 @Component({
   computed: {
     ...mapState('layout', ['mainNavigation'])
   }
 })
-export default class MobileMenu extends Vue {}
+export default class MobileMenu extends Vue {
+  mdiHome = mdiHome
+}
 </script>
