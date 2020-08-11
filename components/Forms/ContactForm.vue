@@ -11,7 +11,9 @@
       <!-- Name Section -->
       <v-col cols="12" sm="6" md="4">
         <v-text-field
+          id="firstName"
           v-model="fields.firstName"
+          name="firstName"
           :error-messages="firstNameErrors"
           :maxlength="20"
           :counter="20"
@@ -23,7 +25,9 @@
       </v-col>
       <v-col cols="12" sm="6" md="4">
         <v-text-field
+          id="lastName"
           v-model="fields.lastName"
+          name="lastName"
           :error-messages="lastNameErrors"
           :maxlength="20"
           :counter="20"
@@ -36,7 +40,9 @@
       <!-- email & company section -->
       <v-col cols="12" sm="6" md="4">
         <v-text-field
+          id="email"
           v-model="fields.email"
+          name="email"
           :error-messages="emailErrors"
           label="E-mail"
           email
@@ -47,7 +53,9 @@
       </v-col>
       <v-col cols="12" sm="6" md="4">
         <v-text-field
+          id="company"
           v-model="fields.company"
+          name="company"
           :error-messages="companyErrors"
           :maxlength="50"
           :counter="50"
@@ -60,7 +68,9 @@
       <!-- phone # and Zip Code Section -->
       <v-col cols="12" sm="6" md="4">
         <v-text-field
+          id="phone"
           v-model="fields.phone"
+          name="phone"
           type="tel"
           v-mask="'(###) ### - ####'"
           :error-messages="phoneErrors"
@@ -72,7 +82,9 @@
       </v-col>
       <v-col cols="12" sm="6" md="4">
         <v-text-field
+          id="zip"
           v-model="fields.zip"
+          name="zip"
           inputmode="numeric"
           pattern="\d*"
           v-mask="'#####'"
@@ -86,7 +98,9 @@
       <!-- Subject and Message Section  -->
       <v-col cols="12" sm="12" md="12">
         <v-text-field
+          id="subject"
           v-model="fields.subject"
+          name="subject"
           :error-messages="subjectErrors"
           :maxlength="50"
           :counter="50"
@@ -98,7 +112,9 @@
       </v-col>
       <v-col cols="12" sm="12" md="12">
         <v-textarea
+          id="message"
           v-model="fields.message"
+          name="message"
           rows="2"
           auto-grow
           :error-messages="messageErrors"
@@ -110,8 +126,10 @@
           @blur="$v.fields.message.$touch()"
         ></v-textarea>
       </v-col>
+      <v-col>
+        <v-btn block large color="primary" type="submit">Submit</v-btn>
+      </v-col>
     </v-row>
-    <v-btn type="submit">Submit</v-btn>
   </v-form>
 </template>
 <style lang="css" scoped></style>
@@ -246,7 +264,7 @@ const phone: CustomRule = (phone: string) => {
   }
 })
 export default class ContactForm extends Vue {
-  formName = 'test'
+  formName = 'Contact Form'
 
   fields: ContactFields = {
     firstName: '',
