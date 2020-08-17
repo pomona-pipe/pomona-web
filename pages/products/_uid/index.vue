@@ -23,7 +23,7 @@
               >
                 <v-hover v-slot:default="{ hover }" open-delay="200">
                   <v-card
-                    :to="`./${pageUid}/${product.uid}`"
+                    :to="`./${uid}/${product.uid}`"
                     :elevation="hover ? 16 : 2"
                     class="mx-auto"
                     max-width="344"
@@ -48,43 +48,57 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { Context } from '@nuxt/types'
+import { Route } from 'vue-router/types'
 import { Store, mapState } from 'vuex'
 import { find } from 'lodash'
+import pageVisits from '~/services/pageVisits'
 import { IPrismic } from '~/shims'
 
 @Component({
   computed: {
-    ...mapState('layout', ['pageUid', 'placeholders'])
+    ...mapState('layout', ['placeholders'])
   }
 })
 export default class ProductCategoryPage extends Vue {
+  // product cards
   get products() {
-    const pageUid = this.$store.state.layout.pageUid
     return this.$store.state.products.products.filter(
-      (product: any) => product.data.product_category.uid === pageUid
+      (product: any) =>
+        product.data.product_category.uid === this.$route.params.uid
     )
+  }
+
+  // for product card links
+  get uid() {
+    return this.$route.params.uid
   }
 
   async fetch({
     store,
-    params,
-    $prismic
+    $prismic,
+    params
   }: {
     store: Store<any>
-    params: Context['route']['params']
     $prismic: IPrismic
+    params: Route['params']
   }) {
+    // return if page has been visited
+    if (pageVisits() > 1) return
+
     const { uid } = params
-    const productsExist = find(
-      store.state.products.products,
-      (product) => product.data.product_category.uid === uid
-    )
-    if (productsExist) return
-    const catId = find(
+
+    // get product category - either from store or by querying prismic
+    let cat = find(
       store.state.products.productCategories,
       (category) => category.uid === uid
-    ).id
+    )
+    if (!cat) {
+      cat = await $prismic.api.getByUID('product_categories', uid)
+      store.commit('products/addProductCategory', cat)
+    }
+
+    // get products by category id
+    const catId = cat.id
     await store.dispatch('products/getProductsByCategory', {
       $prismic,
       catId

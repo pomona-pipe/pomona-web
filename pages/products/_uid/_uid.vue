@@ -17,6 +17,7 @@
 import { Component, Vue } from 'nuxt-property-decorator'
 import { Store, mapState } from 'vuex'
 import { find } from 'lodash'
+import { Route } from 'vue-router/types'
 import { IPrismic, IPrismicDocument } from '~/shims'
 @Component({
   computed: {
@@ -29,30 +30,27 @@ export default class DetailPage extends Vue {
   async fetch({
     store,
     $prismic,
-    error
+    params
   }: {
     store: Store<any>
     $prismic: IPrismic
-    error: any
+    params: Route['params']
   }) {
-    const pageUid = store.state.layout.pageUid
-    const storeProduct = find(store.state.products.products, ['uid', pageUid])
-    // check if product is already in store
+    const { uid } = params
+
+    // return if product exists in store
+    const storeProduct = find(store.state.products.products, { uid })
     if (storeProduct) return
-    // attempt to fetch product
-    try {
-      const result = await $prismic.api.getByUID('products', pageUid)
-      store.commit('products/addProduct', result)
-    } catch (e) {
-      // Returns error page
-      error({ statusCode: 404, message: 'Page not found', error: e })
-    }
+
+    // else, query product and add to store
+    const product = await $prismic.api.getByUID('products', uid)
+    store.commit('products/addProducts', [product])
   }
 
-  // retrieve correct document from store
+  // fetch product from store and copy to component
   created() {
-    const pageUid = this.$store.state.layout.pageUid
-    this.document = find(this.$store.state.products.products, ['uid', pageUid])
+    const uid = this.$route.params.uid
+    this.document = find(this.$store.state.products.products, { uid })
   }
 }
 </script>
