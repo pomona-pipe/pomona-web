@@ -10,7 +10,7 @@
     <input type="hidden" name="form-name" :value="formName" />
     <v-row>
       <!-- Name Section -->
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" md="6">
         <v-text-field
           id="firstName"
           v-model="fields.firstName"
@@ -24,7 +24,7 @@
           @blur="$v.fields.firstName.$touch()"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" md="6">
         <v-text-field
           id="lastName"
           v-model="fields.lastName"
@@ -41,6 +41,20 @@
       <!-- email & company section -->
       <v-col cols="12" sm="6" md="4">
         <v-text-field
+          id="phone"
+          v-model="fields.phone"
+          v-mask="'(###) ### - ####'"
+          name="phone"
+          type="tel"
+          :error-messages="phoneErrors"
+          label="Phone Number"
+          required
+          @input="$v.fields.phone.$touch()"
+          @blur="$v.fields.phone.$touch()"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="6" md="4">
+        <v-text-field
           id="email"
           v-model="fields.email"
           name="email"
@@ -52,7 +66,21 @@
           @blur="$v.fields.email.$touch()"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <!-- Contact Preference Radio Group -->
+      <v-col cols="12" sm="12" md="4">
+        <v-autocomplete
+          id="contactPreference"
+          v-model="fields.contactPreference"
+          name="contactPreference"
+          label="Contact Preference"
+          :items="contactPreferenceOptions"
+          required
+          :error-messages="contactPreferenceErrors"
+          @input="$v.fields.contactPreference.$touch()"
+          @blur="$v.fields.contactPreference.$touch()"
+        ></v-autocomplete>
+      </v-col>
+      <v-col cols="12" sm="6" md="6">
         <v-text-field
           id="company"
           v-model="fields.company"
@@ -67,28 +95,14 @@
         ></v-text-field>
       </v-col>
       <!-- phone # and Zip Code Section -->
-      <v-col cols="12" sm="6" md="4">
-        <v-text-field
-          id="phone"
-          v-model="fields.phone"
-          name="phone"
-          type="tel"
-          v-mask="'(###) ### - ####'"
-          :error-messages="phoneErrors"
-          label="Phone Number"
-          required
-          @input="$v.fields.phone.$touch()"
-          @blur="$v.fields.phone.$touch()"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" md="6">
         <v-text-field
           id="zip"
           v-model="fields.zip"
+          v-mask="'#####'"
           name="zip"
           inputmode="numeric"
           pattern="\d*"
-          v-mask="'#####'"
           :error-messages="zipErrors"
           label="Zip Code"
           required
@@ -96,6 +110,7 @@
           @blur="$v.fields.zip.$touch()"
         ></v-text-field>
       </v-col>
+
       <!-- Subject and Message Section  -->
       <v-col cols="12" sm="12" md="12">
         <v-text-field
@@ -116,7 +131,7 @@
           id="message"
           v-model="fields.message"
           name="message"
-          rows="2"
+          rows="4"
           auto-grow
           :error-messages="messageErrors"
           :maxlength="750"
@@ -135,7 +150,8 @@
           :loading="submissionState.inProgress"
           color="primary"
           type="submit"
-        >Submit</v-btn>
+          >Submit</v-btn
+        >
       </v-col>
     </v-row>
     <!-- Success Snackbar -->
@@ -146,11 +162,12 @@
       top
       color="success"
     >
-      Thank you for contacting us. Someone from our team will respond to you shortly.
-      <template
-        v-slot:action="{ attrs }"
-      >
-        <v-btn text v-bind="attrs" @click="submissionState.success = false">Close</v-btn>
+      Thank you for contacting us. Someone from our team will respond to you
+      shortly.
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="submissionState.success = false"
+          >Close</v-btn
+        >
       </template>
     </v-snackbar>
     <!-- Error Snackbar -->
@@ -161,17 +178,17 @@
       top
       color="error"
     >
-      Oops, something went wrong. Please try again or contact us by phone at 336-292-8060
-      <template
-        v-slot:action="{ attrs }"
-      >
-        <v-btn text v-bind="attrs" @click="submissionState.error = false">Close</v-btn>
+      Oops, something went wrong. Please try again or contact us by phone at
+      336-292-8060
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="submissionState.error = false"
+          >Close</v-btn
+        >
       </template>
     </v-snackbar>
   </v-form>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
@@ -185,6 +202,8 @@ import {
 } from 'vuelidate/lib/validators'
 import { mask } from '@titou10/v-mask'
 
+type ContactPreference = 'Phone' | 'E-mail'
+
 interface ContactFields {
   firstName: string
   lastName: string
@@ -192,6 +211,7 @@ interface ContactFields {
   company: string
   zip: string
   phone: string
+  contactPreference: ContactPreference | ''
   subject: string
   message: string
 }
@@ -227,6 +247,7 @@ const phone: CustomRule = (phone: string) => {
       company: { required },
       zip: { required, minLength: minLength(5) },
       phone: { required, phone, minLength: minLength(10) },
+      contactPreference: { required },
       subject: { required },
       message: { required }
     }
@@ -291,6 +312,15 @@ const phone: CustomRule = (phone: string) => {
         errors.push('Zip Code must be 5 digits')
       return errors
     },
+    contactPreferenceErrors() {
+      const errors: string[] = []
+      // do not error on initial load state
+      if (!this.$v.fields.contactPreference!.$dirty) return errors
+      // required check
+      if (!this.$v.fields.contactPreference!.required)
+        errors.push('Contact Preference is required')
+      return errors
+    },
     subjectErrors() {
       const errors: string[] = []
       // do not error on initial load state
@@ -318,6 +348,7 @@ export default class ContactForm extends Vue {
     snackbarTimeout: 10000
   }
 
+  contactPreferenceOptions: ContactPreference[] = ['Phone', 'E-mail']
 
   defaultfieldValues: ContactFields = {
     firstName: '',
@@ -326,6 +357,7 @@ export default class ContactForm extends Vue {
     company: '',
     zip: '',
     phone: '',
+    contactPreference: '',
     subject: '',
     message: ''
   }
@@ -344,7 +376,7 @@ export default class ContactForm extends Vue {
     })
   }
 
-  resetForm () {
+  resetForm() {
     this.fields = {
       ...this.defaultfieldValues
     }
@@ -356,7 +388,7 @@ export default class ContactForm extends Vue {
       .map(
         (key) =>
           `${encodeURIComponent(key)}=${encodeURIComponent(
-            data[key as keyof FormData]
+            data[key as keyof FormData]!
           )}`
       )
       .join('&')
@@ -370,7 +402,7 @@ export default class ContactForm extends Vue {
     }
 
     this.submissionState.inProgress = true
-    
+
     const axiosConfig = {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }
@@ -384,14 +416,14 @@ export default class ContactForm extends Vue {
         axiosConfig
       )
       .then(() => {
+        // eslint-disable-next-line no-console
         console.log('Form submitted!')
-        // TODO: show a success toast/message and clear form
         this.submissionState.success = true
         this.resetForm()
       })
       .catch((error) => {
+        // eslint-disable-next-line no-console
         console.error(error)
-        // TODO: show an error toast/message
         this.submissionState.error = true
       })
       .finally(() => {
