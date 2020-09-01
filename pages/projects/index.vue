@@ -1,17 +1,18 @@
 <template>
   <section>
-    <v-row cols="12">
-      <v-col v-for="project in projects" :key="project.id" sm="6" lg="4">
-        <v-hover v-slot:default="{ hover }" open-delay="200">
+    <v-container>
+      <v-row cols="12">
+        <v-col v-for="project in projects" :key="project.id" sm="6" lg="4">
           <v-card
             :to="`/projects/${project.uid}`"
-            :elevation="hover ? 16 : 0"
+            hover
+            outlined
             height="100%"
             class="d-flex flex-column justify-space-between"
           >
             <v-img
               :src="
-                project.data.project_image.listing_page.url || placeholders.file
+                project.data.project_description_hero.url || placeholders.file
               "
             ></v-img>
 
@@ -19,16 +20,16 @@
               {{ project.data.project_name[0].text }}
             </v-card-title>
             <v-card-text class="text--primary">
-              {{ project.data.project_description[0].text }}
+              {{ project.data.project_description }}
             </v-card-text>
             <v-card-subtitle>
-              {{ formatDateString(project.data.completion_date) }} in
-              {{ project.data.project_location[0].text }}
+              {{ formatDateString(project.data.overview_completion_date) }} in
+              {{ project.data.project_location }}
             </v-card-subtitle>
           </v-card>
-        </v-hover>
-      </v-col>
-    </v-row>
+        </v-col>
+      </v-row>
+    </v-container>
   </section>
 </template>
 
