@@ -22,8 +22,7 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       {
         rel: 'stylesheet',
-        href:
-        'https://fonts.googleapis.com/css2?family=Open+Sans&display=swap'
+        href: 'https://fonts.googleapis.com/css2?family=Open+Sans&display=swap'
       },
       {
         rel: 'stylesheet',
@@ -37,8 +36,7 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css2?family=Roboto&display=swap'
+        href: 'https://fonts.googleapis.com/css2?family=Roboto&display=swap'
       }
     ]
   },
@@ -62,7 +60,7 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
+    '@nuxt/http',
     '@/modules/static',
     '@/modules/crawler',
     '@nuxtjs/style-resources',
@@ -97,6 +95,11 @@ export default {
   styleResources: {
     scss: ['~/assets/style/variables.scss']
   },
+  /*
+   **  server middleware - use for api endpoints
+   **  https://nuxtjs.org/api/configuration-servermiddleware/
+   */
+  serverMiddleware: { '/api': '~/api' },
   /*
    ** Build configuration
    */
