@@ -19,6 +19,7 @@ interface IPrismicResponse {
 
 type FileType =
   | 'Image'
+  | 'Video'
   | 'PDF'
   | 'Word Document'
   | 'Spreadsheet'
@@ -27,5 +28,10 @@ type FileType =
 
   interface FileInfo {
     type: FileType
-    folder: string
+    s3UploadFolder: string
   }
+
+interface AWSFileUpload {
+  uploadPath: string
+  fileBuffer: Buffer
+}
