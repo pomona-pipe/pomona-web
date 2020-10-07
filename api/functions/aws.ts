@@ -2,9 +2,9 @@ import S3, { ObjectIdentifierList } from 'aws-sdk/clients/s3'
 
 function createS3(Prefix?: string) {
   return new S3({
-    endpoint: 's3.us-east-2.amazonaws.com',
+    endpoint: 's3.us-east-1.amazonaws.com',
     params: {
-      Bucket: 'pomona-dropbox',
+      Bucket: 'pomona-website',
       Prefix
     }
   })
@@ -40,12 +40,13 @@ export async function s3ListFiles() {
 }
 
 export async function s3UploadFile(fileUpload: AWSFileUpload) {
-  const { uploadPath, fileBuffer } = fileUpload
+  const { uploadPath, fileBuffer, contentType } = fileUpload
   const s3 = createS3()
   const uploadParams = {
     Bucket: s3.config.params!.Bucket,
     Key: uploadPath,
-    Body: fileBuffer
+    Body: fileBuffer,
+    ContentType: contentType
   }
   const uploadResponse = s3
     .upload(uploadParams)
