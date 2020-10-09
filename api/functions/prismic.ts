@@ -8,7 +8,12 @@ export async function createPrismicResults(
     serverUrl: string,
     page?: number,
   ) {
-    const results = await listDropboxFiles(fileTypes)
+    
+    const results = (await listDropboxFiles(fileTypes)).map((file) => {
+      const fileExtensionLower = file.name.substr((file.name.lastIndexOf('.') + 1)).toLowerCase()
+      file.name = `${file.name.substr(0, file.name.lastIndexOf('.'))}.${fileExtensionLower}`
+      return file
+    })
     const paginatedResults = page ? paginateFiles(results, page, prismicMaxPerPage) : results
     const prismicResults: IPrismicResult[] = []
     for (const file of paginatedResults) {

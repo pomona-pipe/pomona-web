@@ -7,7 +7,11 @@ import {listDropboxFiles} from './dropbox'
 
 export async function updateS3FromDropbox() {
 
-  const dropboxFiles = await listDropboxFiles()
+  const dropboxFiles = (await listDropboxFiles()).map((file) => {
+    const fileExtensionLower = file.name.substr((file.name.lastIndexOf('.') + 1)).toLowerCase()
+    file.name = `${file.name.substr(0, file.name.lastIndexOf('.'))}.${fileExtensionLower}`
+    return file
+  })
   // get S3 files
   const s3Files = await s3ListFiles()
 
