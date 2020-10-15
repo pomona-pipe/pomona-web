@@ -9,7 +9,7 @@
         <v-img
           v-if="slice.items.length === 1"
           height="500"
-          :src="slice.items[0].section_image.fileUrl || placeholders.file"
+          :src="slice.items[0].section_image ? slice.items[0].section_image.fileUrl : placeholders.file"
         ></v-img>
         <v-carousel v-else-if="slice.items.length > 1" show-arrows-on-hover>
           <v-carousel-item

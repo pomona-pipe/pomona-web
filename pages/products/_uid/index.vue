@@ -17,7 +17,7 @@
         <v-row>
           <v-col v-for="product in products" :key="product.data.id" cols="12" md="6" lg="3">
             <v-card :to="`./${uid}/${product.uid}`" outlined hover height="100%">
-              <v-img :src="product.data.hero_image.fileUrl || placeholders.file" height="200px"></v-img>
+              <v-img :src="product.data.hero_image ? product.data.hero_image.fileUrl : placeholders.file" height="200px"></v-img>
 
               <v-card-title>{{ product.data.name[0].text }}</v-card-title>
             </v-card>
