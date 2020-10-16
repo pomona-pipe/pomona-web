@@ -8,13 +8,13 @@
           <prismic-rich-text :field="document.data.our_solution_paragraph" />
         </v-col>
         <v-col cols="12">
-          <v-img :src="document.data.our_solution_image.url"></v-img>
+          <v-img :src="document.data.our_solution_image.fileUrl"></v-img>
         </v-col>
       </v-row>
       <!-- desktop: float layout -->
       <div class="hidden-sm-and-down">
         <div class="float-md-left img-float-md">
-          <v-img :src="document.data.our_solution_image.url"></v-img>
+          <v-img :src="document.data.our_solution_image.fileUrl"></v-img>
         </div>
         <div>
           <prismic-rich-text :field="document.data.our_solution_paragraph" />

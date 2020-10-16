@@ -8,7 +8,7 @@
             <v-carousel-item
               v-for="image in document.data.image_gallery"
               :key="image.id"
-              :src="image.project_image.url"
+              :src="image.project_image.fileUrl"
             ></v-carousel-item>
           </v-carousel>
         </v-col>

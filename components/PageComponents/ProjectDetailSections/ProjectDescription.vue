@@ -6,9 +6,6 @@
           <div class="grey--text text--lighten-2">
             <prismic-rich-text :field="document.data.project_name" />
           </div>
-          <!-- <div>
-            <p class="subtitle">{{ document.data.project_location }}</p>
-          </div> -->
           <div>
             <p class="subtitle">{{ document.data.project_description }}</p>
           </div>
@@ -34,7 +31,7 @@ import { IPrismic, IPrismicDocument } from '~/shims'
   computed: {
     heroStyles() {
       return {
-        'background-image': `linear-gradient(to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)), url("${(this as any).document.data.project_description_hero.url}")`,
+        'background-image': `linear-gradient(to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)), url("${(this as any).document.data.project_description_hero.fileUrl}")`,
         'background-position': 'center',
         'background-size': 'cover'
       }
