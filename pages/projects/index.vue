@@ -6,7 +6,9 @@
         <v-row align="center" class="fill-height">
           <v-col align="center">
             <div class="grey--text text--lighten-2">
-              <prismic-rich-text :field="projectListingPage[0].data.main_title" />
+              <prismic-rich-text
+                :field="projectListingPage[0].data.main_title"
+              />
             </div>
           </v-col>
         </v-row>
@@ -25,12 +27,18 @@
             >
               <v-img
                 :src="
-                project.data.project_description_hero.url || placeholders.file
-              "
+                  project.data.project_description_hero.fileUrl ||
+                    placeholders.file
+                "
+                height="200px"
               ></v-img>
 
-              <v-card-title>{{ project.data.project_name[0].text }}</v-card-title>
-              <v-card-text class="text--primary">{{ project.data.project_description }}</v-card-text>
+              <v-card-title>{{
+                project.data.project_name[0].text
+              }}</v-card-title>
+              <v-card-text class="text--primary">{{
+                project.data.project_description
+              }}</v-card-text>
               <v-card-subtitle>
                 {{ formatDateString(project.data.overview_completion_date) }} in
                 {{ project.data.project_location }}
@@ -60,7 +68,7 @@ import { IPrismic } from '~/shims'
       return {
         'background-image': `linear-gradient(to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)), url("${
           (this as any).$store.state.pages.projectListingPage[0].data.hero_image
-            .url
+            .fileUrl
         }")`,
         'background-position': 'center',
         'background-size': 'cover'
