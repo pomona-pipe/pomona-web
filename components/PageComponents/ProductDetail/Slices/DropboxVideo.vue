@@ -11,7 +11,7 @@
           class="mx-auto"
           :aspect-ratio="16 / 9"
         >
-          <video width="100%" height="100%" controls controlsList="nodownload">
+          <video width="100%" height="100%" preload="auto" controls controlsList="nodownload">
             <source :src="slice.primary.video_link.fileUrl" type="video/mp4">
             Your browser does not support the video tag.
           </video>
