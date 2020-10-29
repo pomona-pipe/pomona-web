@@ -22,7 +22,7 @@
       </template>
 
       <!-- Repeat Section -->
-      <v-list v-if="navOption.items.length > 0">
+      <v-list v-if="navOption.items.length > 0" rounded>
         <v-list-item
           v-for="subNavOption in navOption.items"
           :key="`desktop-${subNavOption.sub_nav_link.id}`"
@@ -34,7 +34,7 @@
                 : `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}`
           }"
           text
-          rounded
+          dense
           active-class="deep-purple--text text--accent-4"
           exact
         >
