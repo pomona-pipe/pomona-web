@@ -116,15 +116,10 @@
 import { Component, Vue } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
 import algoliasearch from 'algoliasearch/lite'
-import AisIndex from 'vue-instantsearch/src/components'
 import linkResolver from '~/plugins/link-resolver'
-
 @Component({
   computed: {
     ...mapState('layout', ['searchBar'])
-  },
-  components: {
-    AisIndex
   }
 })
 export default class SearchBar extends Vue {
