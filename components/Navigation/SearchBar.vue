@@ -36,7 +36,8 @@
             <v-list-item
               v-for="item in items"
               :key="item.objectID"
-              :to="linkResolver(item.documentLink)"
+              :href="linkResolver(item.documentLink)"
+              data-nuxt-link
               @click.native="clearSearch()"
             >
               <v-list-item-avatar size="60" tile class="rounded">
