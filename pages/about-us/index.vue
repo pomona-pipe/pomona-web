@@ -9,7 +9,9 @@
               <prismic-rich-text :field="aboutUs[0].data.hero_title" />
             </div>
             <div>
-              <p class="subtitle">{{ aboutUs[0].data.hero_subtitle[0].text }}</p>
+              <p class="subtitle">
+                {{ aboutUs[0].data.hero_subtitle[0].text }}
+              </p>
             </div>
           </v-col>
         </v-row>
@@ -19,9 +21,15 @@
     <section>
       <v-container>
         <v-row cols="12">
-          <v-col sm="10" offset-sm="1" class="text-center">
-            <prismic-rich-text :field="aboutUs[0].data.page_sections[0].primary.section_title" />
-            <prismic-rich-text :field="aboutUs[0].data.page_sections[0].primary.section_text" />
+          <v-col sm="10" lg="8" offset-sm="1" offset-lg="2">
+            <prismic-rich-text
+              class="text-center"
+              :field="aboutUs[0].data.page_sections[0].primary.section_title"
+            />
+            <prismic-rich-text
+              class="pa-3"
+              :field="aboutUs[0].data.page_sections[0].primary.section_text"
+            />
           </v-col>
         </v-row>
       </v-container>
@@ -53,6 +61,12 @@ import { IPrismic } from '~/shims'
   }
 })
 export default class Index extends Vue {
+  head() {
+    return {
+      title: (this as any).aboutUs[0].data.hero_title[0].text
+    }
+  }
+
   async fetch({ store, $prismic }: { store: Store<any>; $prismic: IPrismic }) {
     if (pageVisits() > 1) return
     await store.dispatch('pages/getAboutUs', $prismic)
