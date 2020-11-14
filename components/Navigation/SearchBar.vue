@@ -20,6 +20,7 @@
             :class="{
               'pl-4': true,
               'pr-13': true,
+              'py-2': true,
               'slide-in': true,
               in: searchBar.open && !searchBar.isClosing
             }"
@@ -88,7 +89,6 @@
     width: 100%;
     left: 0;
     top: 0;
-    padding: 8px 28px;
     z-index: 1;
     background-color: #ffffff;
   }

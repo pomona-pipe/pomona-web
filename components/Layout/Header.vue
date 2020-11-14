@@ -129,7 +129,7 @@ button {
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import { mdiMenu, mdiMagnify, mdiClose } from '@mdi/js'
 import DesktopMenu from '~/components/Navigation/DesktopMenu.vue'
 import SearchBar from '~/components/Navigation/SearchBar.vue'
@@ -156,21 +156,21 @@ export default class Header extends Vue {
   mdiMagnify = mdiMagnify
   mdiClose = mdiClose
 
-  async toggleSearch() {
+  toggleSearch() {
     // build next state
     const { open } = this.$store.state.layout.searchBar
-    let payload = {
+    const payload = {
       open: !open
     }
     if (open) Object.assign(payload, { isClosing: true })
     // toggle search bar
     this.$store.commit('layout/setSearchBar', payload)
+    const searchInput = document.getElementById('searchInput')!
     // after opening, focus search bar
     if (payload.open) {
-      setTimeout(() => {
-        ((this.$refs.searchBar as Vue).$refs
-          .searchInput as HTMLElement).focus()
-      }, 150)
+      this.$nextTick(() => {
+        searchInput.focus()
+      })
     }
     // after closing, clear isClosing transition state
     else {
