@@ -35,7 +35,7 @@
           </div>
           <!-- Applications -->
           <div>
-            <p class="subtitle">Applications:</p>
+            <p class="subtitle">Product Categories:</p>
             <div v-for="application in document.data.overview_applications" :key="application.id">
               <prismic-link :field="application.application">{{ parseNameFromUid(application.application.uid) }}</prismic-link>
             </div>
