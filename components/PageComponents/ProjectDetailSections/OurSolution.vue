@@ -1,32 +1,21 @@
 <template>
   <section class="page">
-    <v-container>
-      <h2 class="text-center">Our Solution</h2>
-       <!-- mobile: stacked -->
-      <v-row class="hidden-md-and-up">
-        <v-col cols="12">
-          <prismic-rich-text :field="document.data.our_solution_paragraph" />
-        </v-col>
-        <v-col cols="12">
-          <v-img :src="document.data.our_solution_image.fileUrl"></v-img>
-        </v-col>
-      </v-row>
-      <!-- desktop: float layout -->
-      <div class="hidden-sm-and-down">
-        <div class="float-md-left img-float-md">
-          <v-img :src="document.data.our_solution_image.fileUrl"></v-img>
-        </div>
-        <div>
-          <prismic-rich-text :field="document.data.our_solution_paragraph" />
-        </div>
-        <div style="clear: both"></div>
-      </div>
-    </v-container>
+    <v-row class="mx-0">
+      <v-col class="px-0" cols="11" md="5">
+        <v-img
+          class="rounded-r-xl"
+          :src="document.data.our_solution_image.fileUrl"
+        ></v-img>
+      </v-col>
+      <v-col class="pl-0" cols="10" offset="1" md="5">
+        <h2>Our Solution</h2>
+        <prismic-rich-text :field="document.data.our_solution_paragraph" />
+      </v-col>
+    </v-row>
   </section>
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
