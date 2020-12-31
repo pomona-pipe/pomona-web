@@ -13,7 +13,7 @@
           "
         ></v-img>
         <v-carousel
-          class="rounded-xl"
+          class="rounded-xl img-overflow-mask"
           v-else-if="slice.items.length > 1"
           show-arrows-on-hover
         >
