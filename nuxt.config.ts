@@ -1,5 +1,6 @@
 import { Configuration } from 'webpack'
 import theme from './settings/theme'
+import sitemapRouteGenerator from './modules/sitemapRouteGenerator'
 
 export default {
   mode: 'universal',
@@ -19,7 +20,9 @@ export default {
   head: {
     title: '',
     titleTemplate: (titleChunk: string) => {
-      return titleChunk ? `${titleChunk} - Pomona Pipe Products` : 'Pomona Pipe Products'
+      return titleChunk
+        ? `${titleChunk} - Pomona Pipe Products`
+        : 'Pomona Pipe Products'
     },
     meta: [
       { charset: 'utf-8' },
@@ -70,7 +73,11 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ['@nuxt/typescript-build', '@nuxtjs/vuetify'],
+  buildModules: [
+    '@nuxt/typescript-build',
+    '@nuxtjs/vuetify',
+    '@modules/sitemapRouteGenerator'
+  ],
   /*
    ** Nuxt.js modules
    */
@@ -80,7 +87,8 @@ export default {
     '@/modules/crawler',
     '@nuxtjs/style-resources',
     '@nuxtjs/axios',
-    '@nuxtjs/prismic'
+    '@nuxtjs/prismic',
+    '@nuxtjs/sitemap'
   ],
   // vuetify config
   vuetify: {
@@ -97,6 +105,20 @@ export default {
     endpoint: 'https://pomona.cdn.prismic.io/api/v2',
     linkResolver: '@/plugins/link-resolver.ts',
     htmlSerializer: '@/plugins/html-serializer.ts'
+  },
+  // @nuxtjs/sitemap module config
+  sitemap: {
+    hostname: 'https://www.pomonapipeproducts.com',
+    gzip: true,
+    routes: async () => {
+      return await sitemapRouteGenerator()
+    },
+    exclude: ['/preview'],
+    defaults: {
+      changefreq: 'daily',
+      priority: 1,
+      lastmod: new Date()
+    }
   },
   /*
    ** Axios module configuration
