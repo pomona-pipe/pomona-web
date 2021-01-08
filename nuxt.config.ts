@@ -90,6 +90,12 @@ export default {
     '@nuxtjs/prismic',
     '@nuxtjs/sitemap'
   ],
+  /*
+   ** Nuxt.js router
+   */
+  router: {
+    middleware: 'redirects'
+  },
   // vuetify config
   vuetify: {
     theme,
