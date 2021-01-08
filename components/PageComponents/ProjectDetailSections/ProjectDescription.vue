@@ -30,8 +30,8 @@ import { Store, mapState } from 'vuex'
 import { Route } from 'vue-router/types'
 import { find } from 'lodash'
 import moment from 'moment'
-import { IPrismic, IPrismicDocument } from '~/shims'
 import { mdiChevronRight } from '@mdi/js'
+import { IPrismic, IPrismicDocument } from '~/shims'
 
 @Component({
   computed: {
@@ -51,12 +51,6 @@ export default class ProjectDescription extends Vue {
   breadcrumbs: IBreadcrumb[] | null = null
 
   mdiChevronRight = mdiChevronRight
-
-  head() {
-    return {
-      title: (this as any).document.data.name[0].text
-    }
-  }
 
   formatDateString(dateString: string) {
     return moment(dateString).format('MMMM Do YYYY')
