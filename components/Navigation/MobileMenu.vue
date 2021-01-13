@@ -1,15 +1,11 @@
 <template>
-  <v-list nav dense>
+  <v-list rounded nav dense>
     <v-list-item-group>
-      <v-list-item
-        two-line
-        to="/"
-        active-class="deep-purple--text text--accent-4"
-      >
+      <v-list-item two-line to="/" class="px-4" active-class="primary--text">
         <v-list-item-icon class="mr-4 align-self-center">
           <v-icon>{{ mdiHome }}</v-icon>
         </v-list-item-icon>
-        <v-list-item-content>Home</v-list-item-content>
+        <v-list-item-content class="text-center">Home</v-list-item-content>
       </v-list-item>
     </v-list-item-group>
     <div
@@ -21,9 +17,11 @@
         <v-list-item
           two-line
           :nuxt="true"
-          :to="`/${navOption.primary.link.uid}`"
-          class="px-4"
-          active-class="deep-purple--text text--accent-4"
+          :to="{
+            path: linkResolver(navOption.primary.link)
+          }"
+          class="pr-4 pl-6"
+          active-class="primary--text"
         >
           <v-list-item-content>
             {{ navOption.primary.label[0].text }}
@@ -32,10 +30,10 @@
       </v-list-item-group>
 
       <!-- dropdown nav option -->
-      <v-list-group v-else active-class="deep-purple--text text--accent-4">
+      <v-list-group v-else>
         <!-- Dropdown title -->
         <template v-slot:activator>
-          <v-list-item two-line :nuxt="true">
+          <v-list-item class="px-4" two-line :nuxt="true">
             {{ navOption.primary.label[0].text }}
           </v-list-item>
         </template>
@@ -45,12 +43,9 @@
           :key="`mobile-${subNavOption.sub_nav_link.id}`"
           :nuxt="true"
           :to="{
-            path:
-              navOption.primary.link.uid === subNavOption.sub_nav_link.uid
-                ? `/${navOption.primary.link.uid}`
-                : `/${navOption.primary.link.uid}/${subNavOption.sub_nav_link.uid}`
+            path: linkResolver(subNavOption.sub_nav_link)
           }"
-          active-class="deep-purple--text text--accent-4"
+          class="pl-8"
           two-line
           exact
         >
@@ -63,12 +58,17 @@
   </v-list>
 </template>
 
-<style scoped lang="css"></style>
+<style scoped lang="css">
+.v-list-item__subtitle {
+  color: inherit !important;
+}
+</style>
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
 import { mdiHome } from '@mdi/js'
+import linkResolver from '~/plugins/link-resolver'
 
 @Component({
   computed: {
@@ -76,6 +76,7 @@ import { mdiHome } from '@mdi/js'
   }
 })
 export default class MobileMenu extends Vue {
+  linkResolver = linkResolver
   mdiHome = mdiHome
 }
 </script>
