@@ -21,7 +21,7 @@
         ></v-app-bar-nav-icon>
         <!-- Company Logo -->
         <nuxt-link to="/">
-          <img src="/images/logo_xlarge.png" class="pomona_logo" />
+          <img src="/images/logo.png" class="pomona_logo" />
         </nuxt-link>
         <div class="d-flex">
           <!-- Desktop Navigation Menu -->
