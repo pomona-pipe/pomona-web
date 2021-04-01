@@ -14,7 +14,22 @@ module.exports = {
   plugins: [
     'prettier'
   ],
-  // add your custom rules here
+  /*
+  ** Custom rules
+  ** https://eslint.org/docs/rules/
+  ** off || 0
+  ** warn || 1
+  ** error || 2
+  */
   rules: {
+    '@typescript-eslint/no-unused-vars': 'warn',
+    'camelcase': 'warn',
+    'import/order': 'warn',
+    'no-unused-vars': 'warn',
+    'object-shorthand': 'warn',
+    'prettier/prettier': 'off',
+    'promise/param-names': 'warn',
+    'prefer-promise-reject-errors': 'warn',
+    'require-await': 'off'
   }
 }
