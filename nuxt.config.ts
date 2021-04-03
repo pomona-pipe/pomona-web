@@ -4,9 +4,13 @@ import sitemapRouteGenerator from './modules/sitemapRouteGenerator'
 
 export default {
   mode: 'universal',
+  server: {
+    port: process.env.PORT || 3000,
+    host: process.env.HOSTNAME || 'localhost',
+    timing: false
+  },
   /*
-   ** Server-Side environment vars to pass to client
-   ** can access in UI thru either
+   ** Client-side env vars
    ** 1. process.env.myEnvVarCamelCase
    ** 2. context.env.myEnvVarCamelCase
    */
