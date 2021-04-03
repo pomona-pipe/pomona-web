@@ -1,20 +1,18 @@
 import { SHA256, enc } from 'crypto-js'
 import ResolvedApi from 'prismic-javascript/d.ts/ResolvedApi'
-import { prismicMaxPerPage, cloudfrontUrl } from '../data'
-import { paginate, getFileInfo, getFileThumbnail } from '../tools'
+import { S3UploadFolder, IPrismicResult } from '../types'
+import { prismicMaxPerPage, cloudfrontUrl, frontendServerUrl } from '../data'
+import { getFileInfo, getFileThumbnail, paginate } from '../tools'
+import { setCacheValue, getCacheValue } from '../functions/redis'
 import { s3ListFiles } from './aws'
 
-export async function createPrismicResults(
-  filePrefix: S3UploadFolder,
-  serverUrl: string,
-  page?: number
-) {
+export async function savePrismicResults(filePrefix: S3UploadFolder) {
   const results = await s3ListFiles(filePrefix)
-  const paginatedResults = page
-    ? paginate(results, page, prismicMaxPerPage)
-    : results
+  if(results.length === 0) {
+    return results.length
+  }
   const prismicResults: IPrismicResult[] = []
-  for (const file of paginatedResults) {
+  for (const file of results) {
     const { LastModified, Key } = file
     const fileName = Key!.split('/')[1]
     const fileInfo = getFileInfo(fileName)
@@ -23,7 +21,7 @@ export async function createPrismicResults(
     const wordArray = SHA256(fileName)
     const hashedId = wordArray.toString(enc.Base64)
 
-    const thumbnail = getFileThumbnail(fileUrl, type, serverUrl)
+    const thumbnail = getFileThumbnail(fileUrl, type, frontendServerUrl)
     prismicResults.push({
       id: hashedId,
       title: fileName,
@@ -33,10 +31,22 @@ export async function createPrismicResults(
       blob: { fileUrl, fileName, thumbnail }
     })
   }
+  return setCacheValue(filePrefix, prismicResults)
+    .then(() => results.length)
+    .catch((err => err))
+}
 
+export async function fetchPrismicResults(
+  filePrefix: S3UploadFolder,
+  page?: number
+) {
+  const prismicFiles: IPrismicResult[] = await getCacheValue(filePrefix)
+  const paginatedResults = page
+    ? paginate(prismicFiles, page, prismicMaxPerPage)
+    : prismicFiles
   return {
-    results_size: results.length,
-    results: prismicResults
+    results_size: prismicFiles.length,
+    results: paginatedResults
   }
 }
 

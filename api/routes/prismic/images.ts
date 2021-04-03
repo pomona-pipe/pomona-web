@@ -1,19 +1,14 @@
-/* eslint-disable camelcase */
 import { Router } from 'express'
-import { getServerUrl } from '../../tools'
-import { createPrismicResults } from '../../functions/prismic'
+import { fetchPrismicResults } from '../../functions/prismic'
 
-// create route and export to api
 const router = Router()
 router.use('/prismic/images', async (req, res) => {
-  const fileType: S3UploadFolder = 'images'
   const page = Number(req.query.page)
-  const serverUrl = getServerUrl(req)
-  const results = await createPrismicResults(
-    fileType,
-    serverUrl,
-    page
-  )
-  res.send(results)
+  try {
+    const results = await fetchPrismicResults('images', page)
+    res.send(results)
+  } catch(err) {
+    res.status(500).send(err)
+  }
 })
 export default router

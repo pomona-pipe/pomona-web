@@ -1,11 +1,13 @@
 import express from 'express'
-import updateS3FromDropbox from './routes/s3UpdateFromDropbox'
-import images from './routes/prismic/images'
-import pdfs from './routes/prismic/pdfs'
-import docs from './routes/prismic/docs'
-import videos from './routes/prismic/videos'
-import sendToAlgolia from './routes/prismic/send-to-algolia'
-import slackChannelPost from './routes/forms/slackChannelPost'
+import updateS3FromDropbox from './routes/s3/syncFromDropbox'
+import saveImages from './routes/redis/images'
+import savePdfs from './routes/redis/pdfs'
+import saveVideos from './routes/redis/videos'
+import getImages from './routes/prismic/images'
+import getPdfs from './routes/prismic/pdfs'
+import getVideos from './routes/prismic/videos'
+import sendToAlgolia from './routes/algolia/sendPrismicPages'
+import slackChannelPost from './routes/forms/sendToSlack'
 import sendEmail from './routes/forms/sendEmail'
 
 // create express server
@@ -22,14 +24,15 @@ app.use(express.json())
 // add routes
 app.use(
   updateS3FromDropbox,
-  images,
-  pdfs,
-  docs,
-  videos,
+  saveImages,
+  savePdfs,
+  saveVideos,
+  getImages,
+  getPdfs,
+  getVideos,
   sendToAlgolia,
   slackChannelPost,
-  sendEmail
+  sendEmail,
 )
 
-// Export express app
 export default app

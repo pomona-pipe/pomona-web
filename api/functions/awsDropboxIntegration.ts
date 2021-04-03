@@ -4,6 +4,7 @@ import { s3ListFiles, s3UploadFile, s3DeleteFiles } from './aws'
 import { dropbox } from '../data'
 import { getFileInfo, getSanitizedFileName } from '../tools'
 import { listDropboxFiles } from './dropbox'
+import { ContentType } from '../types'
 
 interface S3Upload {
   uploadPath: string
@@ -35,9 +36,14 @@ export default async function s3UpdateFromDropbox() {
   // Delete files from S3 if removed from Dropbox
   const deleted = await updateDeletions(dropboxFiles, s3Files)
 
+  const { newFiles, updatedFiles } = uploaded
+
   return {
-    uploaded,
-    deleted
+    uploaded: {
+      newFiles: newFiles.map(file => file.uploadPath),
+      updatedFiles: updatedFiles.map(file => file.uploadPath)
+    },
+    deleted: deleted.map(file => file.Key)
   }
 }
 

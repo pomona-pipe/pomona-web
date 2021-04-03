@@ -408,7 +408,7 @@ export default class ContactForm extends Vue {
     // post to slack and send email
     await Promise.all([
       // slack webhook url is a process.env var
-      axios.post('/api/forms/slack-channel-post', {
+      axios.post('/api/forms/send-to-slack', {
         webhook: 'CONTACT_FORM_SLACK_WEBHOOK',
         formData
       }),

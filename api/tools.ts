@@ -1,4 +1,4 @@
-import { Request } from 'express'
+import { FileInfo, FileType } from './types'
 
 export function paginate(
   files: any[],
@@ -9,14 +9,6 @@ export function paginate(
   const end = start + resultsLimit
   const pageResults = files.slice(start, end)
   return pageResults
-}
-
-export function getServerUrl(request: Request) {
-  const serverUrl =
-    process.env.NODE_ENV === 'development'
-      ? 'http://localhost:3000'
-      : `https://${request.hostname}`
-  return serverUrl
 }
 
 export function getSanitizedFileName(fileName: string) {
@@ -171,4 +163,3 @@ export function snakeCaseToTitle(snakeString: string) {
     .join(' ')
   return title
 }
-
