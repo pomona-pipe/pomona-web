@@ -71,7 +71,7 @@ import { Route } from 'vue-router/types'
 import { find } from 'lodash'
 import moment from 'moment'
 import { IPrismic, IPrismicDocument } from '~/shims'
-import parseNameFromUid from '~/services/uidToPageName.ts'
+import parseNameFromUid from '~/services/uidToPageName'
 
 @Component({})
 export default class Overview extends Vue {
