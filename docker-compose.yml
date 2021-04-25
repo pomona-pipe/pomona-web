@@ -1,10 +1,28 @@
-version: '3'
+version: "3"
+
 services:
-  app:
-    build: .
+  nuxt:
+    build: ./app/
+    container_name: nuxt-app
+    restart: always
     ports:
-     - "3000:3000"
-    links:
-     - redis:redis
+      - '3000:3000'
+    command:
+      'npm run start'
+    depends_on:
+      - redis
+
   redis:
     image: "redis:alpine"
+    container_name: redis-prismic
+    command: ["redis-server", "--appendonly", "yes"]
+
+  nginx:
+    image: nginx:1.17
+    container_name: nginx-server
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - nuxt

@@ -1,0 +1,10 @@
+.editorconfig
+.eslintrc.js
+.gitignore
+.nuxt
+.prettierrc
+dist
+node_modules
+package-lock.json
+*.md
+*/**/*.md
