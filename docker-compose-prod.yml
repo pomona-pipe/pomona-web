@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  nuxt:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${APPLICATION_NAME}-nuxt
+    build: ./app/
+    container_name: nuxt-app
+    restart: always
+    ports:
+      - '3000:3000'
+    command:
+      'npm run start'
+    depends_on:
+      - redis
+
+  redis:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${APPLICATION_NAME}-redis
+    container_name: redis-prismic
+    command: ["redis-server", "--appendonly", "yes"]
+
+  nginx:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${APPLICATION_NAME}-nginx
+    container_name: nginx-server
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - nuxt
