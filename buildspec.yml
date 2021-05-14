@@ -19,6 +19,9 @@ phases:
       - docker-compose --file=docker-compose-prod.yml build
   post_build:
     commands:
+      # replace env vars in Dockerrun.aws.json
+      - sed -i 's/${AWS_ACCOUNT_ID}/'"$AWS_ACCOUNT_ID"'/g; s/${AWS_REGION}/'"$AWS_REGION"'/g; s/${APPLICATION_NAME}/'"$APPLICATION_NAME"'/g' 'Dockerrun.aws.json'
+      # push container to ECR
       - echo Build completed on `date`
       - echo Pushing the Docker image...
       - docker-compose --file=docker-compose-prod.yml push
