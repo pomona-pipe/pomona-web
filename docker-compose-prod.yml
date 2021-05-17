@@ -14,12 +14,12 @@ services:
       - redis
 
   redis:
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${APPLICATION_NAME}-redis
+    image: redis:alpine
     container_name: redis-prismic
     command: ["redis-server", "--appendonly", "yes"]
 
   nginx:
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${APPLICATION_NAME}-nginx
+    image: nginx:1.17
     container_name: nginx-server
     ports:
       - '80:80'

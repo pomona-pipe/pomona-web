@@ -10,14 +10,14 @@
     },
     {
       "name": "redis",
-      "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${APPLICATION_NAME}-redis",
+      "image": "redis:alpine",
       "hostname": "redis",
       "essential": false,
       "memory": 128
     },
     {
       "name": "nginx",
-      "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${APPLICATION_NAME}-nginx",
+      "image": "nginx:1.17",
       "hostname": "nginx",
       "essential": true,
       "portMappings": [
