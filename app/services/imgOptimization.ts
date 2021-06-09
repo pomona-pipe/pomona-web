@@ -51,13 +51,7 @@ const maxThresholds: ReqICols = (() => {
 export function createImgSrcset(url: string, cols?: ICols, useWebp = true): string {
   if(!cols) {
     const { xs, sm, md, lg, xl } = maxThresholds;
-    return `
-      ${url}@${xs}w ${xs}w,
-      ${url}@${sm}w ${sm}w,
-      ${url}@${md}w ${md}w,
-      ${url}@${lg}w ${lg}w,
-      ${url}@${xl}w ${xl}w
-    `;
+    return `${url}@${xs}w ${xs}w, ${url}@${sm}w ${sm}w, ${url}@${md}w ${md}w, ${url}@${lg}w ${lg}w, ${url}@${xl}w ${xl}w`;
   }
   let srcset = '';
   let colSpan: string | number = 1; // default number of cols
@@ -73,13 +67,7 @@ export function createImgSrcset(url: string, cols?: ICols, useWebp = true): stri
 export function createImgSizes(cols?: ICols): string {
   if(!cols) {
     const { xs, sm, md, lg, xl } = maxThresholds;
-    return `
-      (max-width: ${xs}px) ${xs}px,
-      (max-width: ${sm}px) ${sm}px,
-      (max-width: ${md}px) ${md}px,
-      (max-width: ${lg}px) ${lg}px,
-      (min-width: ${xl}px) ${xl}px
-    `;
+    return `(max-width: ${xs}px) ${xs}px, (max-width: ${sm}px) ${sm}px, (max-width: ${md}px) ${md}px, (max-width: ${lg}px) ${lg}px, (min-width: ${xl}px) ${xl}px`;
   }
   let sizes = '';
   let colSpan: string | number = 1; // default number of cols
