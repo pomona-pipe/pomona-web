@@ -21,10 +21,10 @@
             class="d-flex flex-column justify-space-between"
           >
             <v-img
-              :src="
-                project.data.hero_image.fileUrl || placeholders.file
-              "
-            height="200px"></v-img>
+              :src="cardImgs[index].src"
+              :srcset="cardImgs[index].srcset"
+              :sizes="cardImgs[index].sizes"
+              height="200px"></v-img>
 
             <v-card-title>{{ project.data.name[0].text }}</v-card-title>
             <v-card-text class="text--primary">{{
@@ -59,6 +59,7 @@
 import { Component, Vue } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
 import moment from 'moment'
+import { createImgSrcset, createImgSizes } from '~/services/imgOptimization'
 
 @Component({
   components: {},
@@ -69,6 +70,28 @@ import moment from 'moment'
   }
 })
 export default class FeaturedProjects extends Vue {
+  get cardImgs() {
+    const heroUrls = this.$store.state.projects.projects.map((p: any) => p.data.hero_image.fileUrl);
+    const cols = {
+      xs: 12,
+      sm: 6,
+      lg: 4,
+    };
+    return heroUrls.map((url?: string) => {
+      if(!url) {
+        return {
+          src: this.$store.state.layout.placeholders.file,
+          srcSet: '',
+          sizes: '',
+        }
+      }
+      return {
+        src: url,
+        srcset: createImgSrcset(url, cols),
+        sizes: createImgSizes(cols),
+      }
+    })
+  }
   formatDateString(dateString: string) {
     return moment(dateString).format('MMMM YYYY')
   }
