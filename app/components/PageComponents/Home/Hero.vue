@@ -1,5 +1,11 @@
 <template>
-  <section class="hero" :style="heroStyles">
+  <section class="hero">
+    <v-img
+      :src="heroImg.src"
+      :srcset="heroImg.srcset"
+      :sizes="heroImg.sizes"
+      gradient="to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)"
+    />
     <v-container>
       <v-row align="center" class="fill-height">
         <v-col align="center">
@@ -30,19 +36,29 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
+import { createImgSrcset, createImgSizes } from '~/services/imgOptimization'
 
 @Component({
   components: {},
   computed: {
     ...mapState('pages', ['home']),
-    heroStyles() {
-      return {
-        'background-image': `linear-gradient(to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)), url("${this.$store.state.pages.home[0].data.hero_image.fileUrl}")`,
-        'background-position': 'center',
-        'background-size': 'cover'
-      }
-    }
   }
 })
-export default class Hero extends Vue {}
+export default class Hero extends Vue {
+  get heroImg() {
+    const url = this.$store.state.pages.home[0].data.hero_image.fileUrl;
+    if(!url) {
+      return {
+        src: '',
+        srcSet: '',
+        sizes: '',
+      }
+    }
+    return {
+      src: url,
+      srcset: createImgSrcset(url),
+      sizes: createImgSizes(),
+    }
+  }
+}
 </script>
