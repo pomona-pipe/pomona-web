@@ -13,7 +13,6 @@
           lg="4"
         >
           <v-card
-            v-if="index < 3"
             :to="`/projects/${project.uid}`"
             hover
             outlined
@@ -70,8 +69,11 @@ import { createImgSrcset, createImgSizes } from '~/services/imgOptimization'
   }
 })
 export default class FeaturedProjects extends Vue {
+  get projects() {
+    return this.$store.state.projects.projects.slice(0, 3);
+  }
   get cardImgs() {
-    const heroUrls = this.$store.state.projects.projects.map((p: any) => p.data.hero_image.fileUrl);
+    const heroUrls = this.projects.map((p: any) => p.data.hero_image.fileUrl);
     const cols = {
       xs: 12,
       sm: 6,
