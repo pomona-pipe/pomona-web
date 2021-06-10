@@ -4,7 +4,7 @@
       :src="heroImg.src"
       :srcset="heroImg.srcset"
       :sizes="heroImg.sizes"
-      gradient="to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)"
+      gradient="heroGradient"
     />
     <v-container>
       <v-row align="center" class="fill-height">
