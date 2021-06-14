@@ -1,6 +1,7 @@
 import { Route } from 'vue-router/types'
-import { Theme, VuetifyThemeVariant } from 'vuetify/types/services/theme'
+import { Theme } from 'vuetify/types/services/theme'
 import theme, { IExtendedTheme } from '~/settings/theme'
+import { DeepPartial } from '../types/global';
 // TODO: create types for api response data/payloads
 import { IPrismic } from '~/shims'
 
@@ -9,11 +10,11 @@ interface SearchState {
   isClosing: boolean
 }
 
-interface ILayoutThemeVariant extends IExtendedTheme {
+interface ILayoutThemeVariant extends Partial<IExtendedTheme> {
   heroGradient: string
 }
 
-interface ILayoutTheme extends Theme {
+interface ILayoutTheme extends DeepPartial<Theme> {
   themes: {
     dark: ILayoutThemeVariant
     light: ILayoutThemeVariant
@@ -32,11 +33,11 @@ interface IState {
 }
 
 export const state: () => IState = () => {
-  const { dark, disable, themes, options, currentTheme } = theme;
+  const { dark, themes, options } = theme;
   const heroGradients = {
     light: 'to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)',
     dark: 'to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)',
-  }
+  };
   return {
     routerHistory: [],
     isMobile: null,
@@ -54,14 +55,17 @@ export const state: () => IState = () => {
     // theme,
     theme: {
       dark,
-      default: theme.default,
-      currentTheme,
-      disable,
-      options,
       themes: {
-        ...Object.assign(themes.light, { heroGradient: heroGradients.light }),
-        ...Object.assign(themes.dark, { heroGradient: heroGradients.dark }),
-      }
+        light: {
+          ...themes.light,
+          heroGradient: heroGradients.light,
+        },
+        dark: {
+          ...themes.dark,
+          heroGradient: heroGradients.dark,
+        },
+      },
+      options,
     },
   }
 }

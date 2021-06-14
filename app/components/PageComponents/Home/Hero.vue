@@ -4,7 +4,7 @@
       :src="heroImg.src"
       :srcset="heroImg.srcset"
       :sizes="heroImg.sizes"
-      gradient="heroGradient"
+      :gradient="theme.dark ? theme.themes.dark.heroGradient : theme.themes.light.heroGradient"
     />
     <v-container>
       <v-row align="center" class="fill-height">
@@ -41,6 +41,7 @@ import { createImgSrcset, createImgSizes } from '~/services/imgOptimization'
 @Component({
   components: {},
   computed: {
+    ...mapState('layout', ['theme']),
     ...mapState('pages', ['home']),
   }
 })
