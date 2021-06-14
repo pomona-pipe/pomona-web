@@ -51,6 +51,9 @@ const maxThresholds: ReqICols = (() => {
 export function createImgSrcset(url: string, cols?: ICols, useWebp = true): string {
   if(!cols) {
     const { xs, sm, md, lg, xl } = maxThresholds;
+    if(useWebp) {
+      return `${url}@${xs}w.webp ${xs}w, ${url}@${sm}w.webp ${sm}w, ${url}@${md}w.webp ${md}w, ${url}@${lg}w.webp ${lg}w, ${url}@${xl}w.webp ${xl}w`;
+    }
     return `${url}@${xs}w ${xs}w, ${url}@${sm}w ${sm}w, ${url}@${md}w ${md}w, ${url}@${lg}w ${lg}w, ${url}@${xl}w ${xl}w`;
   }
   let srcset = '';
