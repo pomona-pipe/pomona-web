@@ -1,7 +1,13 @@
 <template>
   <div>
     <!-- Hero Section  -->
-    <section class="hero" :style="heroStyles">
+    <section class="hero">
+      <v-img
+        :src="heroImg.src"
+        :srcset="heroImg.srcset"
+        :sizes="heroImg.sizes"
+        :gradient="theme.dark ? theme.themes.dark.heroGradient : theme.themes.light.heroGradient"
+      />
       <!-- breadcrumbs nav -->
       <Breadcrumb :breadcrumbs="breadcrumbs"/>
       <v-container>
@@ -20,10 +26,11 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { Store } from 'vuex'
+import { Store, mapState } from 'vuex'
 import { find } from 'lodash'
 import { Route } from 'vue-router/types'
 import { IPrismic, IPrismicDocument } from '~/shims'
+import { createImgSrcset, createImgSizes } from '~/services/imgOptimization'
 import parseNameFromUid from '~/services/uidToPageName'
 import SlicesBlock from '~/components/PageComponents/ProductDetail/SlicesBlock.vue'
 import Breadcrumb from '~/components/Navigation/Breadcrumbs.vue'
@@ -34,15 +41,7 @@ import Breadcrumb from '~/components/Navigation/Breadcrumbs.vue'
     Breadcrumb,
   },
   computed: {
-    heroStyles() {
-      return {
-        'background-image': `linear-gradient(to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)), url("${
-          (this as any).document.data.hero_image.fileUrl
-        }")`,
-        'background-position': 'center',
-        'background-size': 'cover'
-      }
-    }
+    ...mapState('layout', ['theme']),
   }
 })
 export default class DetailPage extends Vue {
@@ -61,6 +60,22 @@ export default class DetailPage extends Vue {
           content: (this as any).document.data.meta_description
         }
       ]
+    }
+  }
+
+  get heroImg() {
+    const url = this.document!.data.hero_image.fileUrl;
+    if(!url) {
+      return {
+        src: '',
+        srcSet: '',
+        sizes: '',
+      }
+    }
+    return {
+      src: url,
+      srcset: createImgSrcset(url),
+      sizes: createImgSizes(),
     }
   }
 
