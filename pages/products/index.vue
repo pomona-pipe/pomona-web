@@ -79,7 +79,7 @@ export default class Index extends Vue {
   }
 
   async fetch({ store, $prismic }: { store: Store<any>; $prismic: IPrismic }) {
-    if (pageVisits() > 1) return
+    if (pageVisits(store) > 1) return
     await store.dispatch('products/getProductCategories', $prismic)
     await store.dispatch('pages/getCategoryPage', $prismic)
   }

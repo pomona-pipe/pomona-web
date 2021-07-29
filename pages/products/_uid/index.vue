@@ -115,7 +115,7 @@ export default class ProductCategoryPage extends Vue {
     params: Route['params']
   }) {
     // return if page has been visited
-    if (pageVisits() > 1) return
+    if (pageVisits(store) > 1) return
 
     const { uid } = params
 
