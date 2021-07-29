@@ -1,26 +1,27 @@
-# pomona-site-v2
+# [Pomona Pipe Products - Business Website](<(http://pomona-web.us-east-1.elasticbeanstalk.com/)>)
 
-> The Pomona Pipe Products website.
+> CMS: Primsic
 
-> Stack: Prismic.io, Nuxt.js, Typescript, Netlify 
-               < Live version >
------> https://www.pomonasupply.com <------
+> Stack: Docker, Redis, Nuxt/Typescript
 
-## Build Setup
+> Infrastructure: AWS Elastic Beanstalk, Codepipeline
+
+## Development Setup
+
+### Node Server
 
 ```bash
-# install dependencies
-$ npm install
-
-# serve with hot reload at localhost:3000
-$ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
+  $ npm install
+  $ npm run dev
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+### Docker Container
+
+- Install [Docker Desktop](https://www.docker.com/products/docker-desktop)
+
+```bash
+  $ docker-compose -f docker-compose.dev.yml up --build -d
+```
+
+- View running containers in Docker Desktop
+- Access at `http:///localhost`
