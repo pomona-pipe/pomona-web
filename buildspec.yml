@@ -1,0 +1,30 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - printf 'ALGOLIA_API_KEY='"$ALGOLIA_API_KEY"'\nALGOLIA_APP_ID='"$ALGOLIA_APP_ID" > app/.env
+      - cat app/.env
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker-compose -f docker-compose.ci.yml build
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      # push containers to ECR
+      - echo Pushing Docker images...
+      - docker-compose -f docker-compose.ci.yml push
+      # insert env vars into prod docker-compose
+      - sed -i 's/${AWS_ACCOUNT_ID}/'"$AWS_ACCOUNT_ID"'/g; s/${AWS_REGION}/'"$AWS_REGION"'/g; s/${APPLICATION_NAME}/'"$APPLICATION_NAME"'/g' 'docker-compose.prod.yml'
+      # replace docker-compose for EB deployment
+      - mv docker-compose.prod.yml docker-compose.yml
+
+artifacts:
+  files:
+    - 'docker-compose.yml'

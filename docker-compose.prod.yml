@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  nuxt:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${APPLICATION_NAME}-nuxt
+    container_name: nuxt-app
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    volumes:
+      - '${EB_LOG_BASE_DIR}/nuxt:/var/log/nuxt'
+    command: 'npm run start'
+
+  nginx:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${APPLICATION_NAME}-nginx
+    container_name: nginx-server
+    ports:
+      - '80:80'
+    volumes:
+      - '${EB_LOG_BASE_DIR}/nginx:/var/log/nginx'
+    depends_on:
+      - nuxt
