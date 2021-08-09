@@ -20,11 +20,14 @@ phases:
       # push containers to ECR
       - echo Pushing Docker images...
       - docker-compose -f docker-compose.ci.yml push
-      # insert env vars into prod docker-compose
+      # insert codepipeline env vars into prod EB config - use % as sed delimiter due to var values
+      - sed -i 's%${POMONAPIPEPRODUCTSCOM_SSL_ARN}%'"$POMONAPIPEPRODUCTSCOM_SSL_ARN"'%g; s%${POMONASUPPLYCOM_SSL_ARN}%'"$POMONASUPPLYCOM_SSL_ARN"'%g' '.ebextensions/prod.config'
+      # insert codebuild env vars into prod docker-compose
       - sed -i 's/${AWS_ACCOUNT_ID}/'"$AWS_ACCOUNT_ID"'/g; s/${AWS_REGION}/'"$AWS_REGION"'/g; s/${APPLICATION_NAME}/'"$APPLICATION_NAME"'/g' 'docker-compose.prod.yml'
       # replace docker-compose for EB deployment
       - mv docker-compose.prod.yml docker-compose.yml
 
 artifacts:
   files:
+    - '.ebextensions/*'
     - 'docker-compose.yml'
