@@ -22,14 +22,16 @@ router.use('/forms/send-email', async (req, res) => {
   // node env vars
   const {
     CONTACT_FORM_SENDER_EMAIL,
-    CONTACT_FORM_EMAIL_RECEPIENTS
+    CONTACT_FORM_EMAIL_RECEPIENTS,
+    CONTACT_FORM_BOUNCE_EMAIL,
   } = process.env
   // configure AWS
   config.update({ region: 'us-east-1' })
   // create sendEmail params
   const params = {
     Destination: {
-      ToAddresses: CONTACT_FORM_EMAIL_RECEPIENTS!.split(/\s*/)
+      // NOTE: assumes emails are separated by a space
+      ToAddresses: CONTACT_FORM_EMAIL_RECEPIENTS!.split(/\s/)
     },
     Message: {
       Body: {
@@ -46,7 +48,8 @@ router.use('/forms/send-email', async (req, res) => {
     Source: CONTACT_FORM_SENDER_EMAIL!,
     ReplyToAddresses: [
       formData.email!
-    ]
+    ],
+    ReturnPath: CONTACT_FORM_BOUNCE_EMAIL,
   }
   // create SES service object
   const ses = new SES()
