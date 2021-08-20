@@ -6,14 +6,13 @@
       <h2 class="text-center">Featured Projects:</h2>
       <v-row class="mt-12">
         <v-col
-          v-for="(project, index) in projects"
+          v-for="(project) in projects"
           :key="project.id"
           cols="12"
           sm="6"
           lg="4"
         >
           <v-card
-            v-if="index < 3"
             :to="`/projects/${project.uid}`"
             hover
             outlined
@@ -69,6 +68,9 @@ import moment from 'moment'
   }
 })
 export default class FeaturedProjects extends Vue {
+  get projects() {
+    return this.$store.state.projects.projects.slice(0, 3);
+  }
   formatDateString(dateString: string) {
     return moment(dateString).format('MMMM YYYY')
   }
