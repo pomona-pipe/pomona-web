@@ -4,6 +4,36 @@
 ** can also use vuetify theme vars: var(--v-primary-base)
 */
 
+// layout - 5 columns
+.col-20 {
+  flex: 0 0 20% !important;
+  max-width: 20% !important;
+}
+@media (min-width: 600px) {
+  .col-sm-20 {
+    flex: 0 0 20% !important;
+    max-width: 20% !important;
+  }
+}
+@media (min-width: 960px) {
+  .col-md-20 {
+    flex: 0 0 20% !important;
+    max-width: 20% !important;
+  }
+}
+@media (min-width: 1264px) {
+  .col-lg-20 {
+    flex: 0 0 20% !important;
+    max-width: 20% !important;
+  }
+}
+@media (min-width: 1904px) {
+  .col-xl-20 {
+    flex: 0 0 20% !important;
+    max-width: 20% !important;
+  }
+}
+
 // headings
 h1 {
   font-family: $heading-font-family;
@@ -42,8 +72,6 @@ h6 {
 a {
   font-family: $button-font-family;
 }
-
-
 
 // page sections
 section {
