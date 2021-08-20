@@ -1,10 +1,24 @@
 import { Route } from 'vue-router/types'
+import { Theme } from 'vuetify/types/services/theme'
+import theme, { IExtendedTheme } from '~/settings/theme'
+import { DeepPartial } from '~/types/global';
 // TODO: create types for api response data/payloads
 import { IPrismic } from '~/shims'
 
 interface SearchState {
   open: boolean
   isClosing: boolean
+}
+
+interface ILayoutThemeVariant extends Partial<IExtendedTheme> {
+  heroGradient: string
+}
+
+interface ILayoutTheme extends DeepPartial<Theme> {
+  themes: {
+    dark: ILayoutThemeVariant
+    light: ILayoutThemeVariant
+  }
 }
 
 interface IState {
@@ -15,23 +29,46 @@ interface IState {
   mainNavigation: any[]
   footerNavigation: any[]
   placeholders: { [key: string]: string }
+  theme: ILayoutTheme
 }
 
-export const state: () => IState = () => ({
-  routerHistory: [],
-  isMobile: null,
-  searchBar: {
-    open: false,
-    isClosing: false
-  },
-  mobileDrawer: false,
-  mainNavigation: [],
-  footerNavigation: [],
-  placeholders: {
-    account: '/images/placeholders/account.svg',
-    file: '/images/placeholders/file-image.svg'
+export const state: () => IState = () => {
+  const { dark, themes, options } = theme;
+  const heroGradients = {
+    light: 'to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)',
+    dark: 'to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)',
+  };
+  return {
+    routerHistory: [],
+    isMobile: null,
+    searchBar: {
+      open: false,
+      isClosing: false
+    },
+    mobileDrawer: false,
+    mainNavigation: [],
+    footerNavigation: [],
+    placeholders: {
+      account: '/images/placeholders/account.svg',
+      file: '/images/placeholders/file-image.svg'
+    },
+    // theme,
+    theme: {
+      dark,
+      themes: {
+        light: {
+          ...themes.light,
+          heroGradient: heroGradients.light,
+        },
+        dark: {
+          ...themes.dark,
+          heroGradient: heroGradients.dark,
+        },
+      },
+      options,
+    },
   }
-})
+}
 
 export const mutations = {
   updateRouterHistory(state: IState, payload: Partial<Route>) {

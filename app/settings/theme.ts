@@ -2,7 +2,7 @@ import colors from 'vuetify/es5/util/colors'
 import { Theme, VuetifyThemeVariant } from 'vuetify/types/services/theme'
 
 // custom theme colors
-interface IExtendedTheme extends VuetifyThemeVariant {
+export interface IExtendedTheme extends VuetifyThemeVariant {
   brandGrey: string
   mainBackground: string
   headerBackground: string
