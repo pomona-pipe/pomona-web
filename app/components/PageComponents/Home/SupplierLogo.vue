@@ -11,12 +11,16 @@
           <v-col
             v-for="logo in home[0].data.supplier_logos"
             :key="logo.id"
-            class="pb-16 px-8 flex-grow-0"
+            cols="12"
+            sm="6"
+            md="4"
+            class="col-lg-20 pb-16 px-8"
           >
             <v-img
-              :src="logo.image.fileUrl"
-              max-height="200px"
+              :src="`${logo.image.fileUrl}@150w_200h.webp`"
+              class="mx-auto"
               max-width="150px"
+              max-height="200px"
             ></v-img>
           </v-col>
         </v-row>

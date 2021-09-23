@@ -134,8 +134,8 @@ export default {
   */
   axios: {},
   /*
-  ** style-resources for sharing scss vars across files
-  ** https://github.com/nuxt-community/vuetify-module
+  ** style-resources - automatically shares scss vars across components and stylesheets
+  ** https://github.com/nuxt-community/style-resources-module
   */
   styleResources: {
     scss: ['~/assets/style/variables.scss']
