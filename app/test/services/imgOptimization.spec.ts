@@ -1,7 +1,9 @@
-import imgOptimization, { ICols } from '~/services/imgOptimization';
+import imgOptimization from '~/services/imgOptimization';
+import { styles, BreakpointKey } from '~/utils/styles';
 
 describe('Image Optimization Service', () => {
-  const { createImgSrcset, createImgSizes, imgWidthCalculator, bpThresholds, bpThresholds: { xs, sm, md, lg, xl }, uhd, vuetifyScss } = imgOptimization;
+  const { createImgSrcset, createImgSizes, imgWidthCalculator } = imgOptimization;
+  const { gridBreakpoints, gridBreakpoints: { xs, sm, md, lg, xl, xxl } } = styles;
   const cols = {
     xs: 12,
     sm: 6,
@@ -11,8 +13,8 @@ describe('Image Optimization Service', () => {
   };
   const layoutConfig = {
     useContainer: true,
-    rowMarginX: vuetifyScss.rowMarginX,
-    colPaddingX: vuetifyScss.colPaddingX,
+    rowMarginX: styles.rowMarginX,
+    colPaddingX: styles.colPaddingX,
   };
   const colsSpy = jest.spyOn(imgWidthCalculator, 'calcImgWidthInCols').mockImplementationOnce(() => 100);
 
@@ -30,7 +32,7 @@ describe('Image Optimization Service', () => {
 
     it('Should return image sources corresponding to each Vuetify breakpoint', () => {
       const srcSet = createImgSrcset(url, undefined, undefined, useWebp);
-      expect(srcSet).toEqual(`${url}@${xs}w ${xs}w, ${url}@${sm}w ${sm}w, ${url}@${md}w ${md}w, ${url}@${lg}w ${lg}w, ${url}@${uhd}w ${xl}w`)
+      expect(srcSet).toEqual(`${url}@${xs}w ${xs}w, ${url}@${sm}w ${sm}w, ${url}@${md}w ${md}w, ${url}@${lg}w ${lg}w, ${url}@${xxl}w ${xl}w`)
     });
 
     it('Should return webp images when requested', () => {
@@ -82,7 +84,7 @@ describe('Image Optimization Service', () => {
 
     it('Should return image sizes that cover all Vuetify media queries', () => {
       const sizes = createImgSizes();
-      expect(sizes).toEqual(`(max-width: ${xs}px) ${xs}px, (max-width: ${sm}px) ${sm}px, (max-width: ${md}px) ${md}px, (max-width: ${lg}px) ${lg}px, (min-width: ${xl}px) ${uhd}px`)
+      expect(sizes).toEqual(`(max-width: ${xs}px) ${xs}px, (max-width: ${sm}px) ${sm}px, (max-width: ${md}px) ${md}px, (max-width: ${lg}px) ${lg}px, (min-width: ${xl}px) ${xxl}px`)
     });
 
     it('Should return image sizes fitted to a column layout when requested', () => {
@@ -94,54 +96,34 @@ describe('Image Optimization Service', () => {
   });
 
   describe('imgWidthCalculator object', () => {
-    const { getMinThreshold, getPreviousBp, getMaxThreshold, getContainerWidth, getContentWidth } = imgWidthCalculator;
+    const { getNextBp, getMaxThreshold, getContainerWidth, getContentWidth } = imgWidthCalculator;
 
     beforeAll(() => {
       colsSpy.mockRestore(); // removes mock implementation before tests
     });
 
-    it('Calculates the correct minThreshold for each breakpoint', () => {
-      const mockPrevBp = 'sm';
-      const previousBpSpy = jest.spyOn(imgWidthCalculator, 'getPreviousBp').mockImplementation(() => mockPrevBp);
-      Object.keys(bpThresholds).forEach((bp) => {
-        const minThreshold = getMinThreshold(bp as keyof ICols);
-        switch(bp) {
-          case 'xs':
-            expect(minThreshold).toBe(0);
-            break;
-          case 'xl':
-            expect(minThreshold).toBe(bpThresholds[bp]);
-            break;
-          default:
-            expect(previousBpSpy).toHaveBeenCalledWith(bp);
-            expect(minThreshold).toBe(bpThresholds[mockPrevBp] + 1)
-        }
-      });
-    });
-
-    it('Calculates the correct previousBp', () => {
+    it('Calculates the correct nextBp', () => {
       const bp = 'md';
-      const prevBp = getPreviousBp(bp);
-      const prevIndex = Object.keys(bpThresholds).indexOf(prevBp);
-      expect(prevBp).toBe(Object.keys(bpThresholds)[prevIndex]);
+      const nextBp = getNextBp(bp);
+      const nextIndex = Object.keys(gridBreakpoints).indexOf(nextBp);
+      expect(nextBp).toBe(Object.keys(gridBreakpoints)[nextIndex]);
     });
 
     it('Calculates the correct maxThreshold for each breakpoint', () => {
-      Object.keys(bpThresholds).forEach((bp) => {
-        const maxThreshold = getMaxThreshold(bp as keyof ICols);
-        const expected = bp === 'xl' ? uhd : bpThresholds[bp as keyof ICols]
+      Object.keys(gridBreakpoints).forEach((bp) => {
+        const maxThreshold = getMaxThreshold(bp as BreakpointKey);
+        const expected = bp === 'xl' ? xxl : gridBreakpoints[bp as BreakpointKey]
         expect(maxThreshold).toBe(expected);
       });
     });
 
     it('Calculates the correct containerWidth for each breakpoint', () => {
-      const minThreshold = 600;
       const maxThreshold = 959;
-      const { containerMaxWidths, containerPaddingX } = vuetifyScss;
-      Object.keys(bpThresholds).forEach((bp) => {
-        const containerWidth = getContainerWidth(bp as keyof ICols, minThreshold, maxThreshold);
-        const threshold = containerMaxWidths[bp as keyof ICols] < 1 ? minThreshold : maxThreshold;
-        const expected = threshold * containerMaxWidths[bp as keyof ICols] - 2 * containerPaddingX;
+      const { containerMaxWidths, containerPaddingX } = styles;
+      Object.keys(gridBreakpoints).forEach((bp) => {
+        const containerWidth = getContainerWidth(bp as BreakpointKey, maxThreshold);
+        const threshold = containerMaxWidths[bp as BreakpointKey] ?? maxThreshold;
+        const expected = threshold * containerMaxWidths[bp as BreakpointKey] - 2 * containerPaddingX;
         expect(containerWidth).toBe(expected);
       });
     });
@@ -171,8 +153,7 @@ describe('Image Optimization Service', () => {
         maxThreshold: 1263,
         containerWidth: 868,
         contentWidth: 868,
-      }
-      const minThresholdSpy = jest.spyOn(imgWidthCalculator, 'getMinThreshold').mockImplementationOnce(() => mocks.minThreshold);
+      };
       const maxThresholdSpy = jest.spyOn(imgWidthCalculator, 'getMaxThreshold').mockImplementationOnce(() => mocks.maxThreshold);
       const containerWidthSpy = jest.spyOn(imgWidthCalculator, 'getContainerWidth').mockImplementationOnce(() => mocks.containerWidth);
       const contentWidthSpy = jest.spyOn(imgWidthCalculator, 'getContentWidth').mockImplementationOnce(() => mocks.contentWidth);
@@ -180,7 +161,7 @@ describe('Image Optimization Service', () => {
       const imgWidth = imgWidthCalculator.calcImgWidthInCols(bp, layoutConfig, colSpan);
       const expected = (() => {
         const { rowMarginX, colPaddingX } = layoutConfig;
-        const { gridColumns } = vuetifyScss;
+        const { gridColumns } = styles;
         const numCols = Math.round(gridColumns / colSpan);
         const innerGutter = 2 * colPaddingX * numCols + 2 * rowMarginX;
         const imgWidth = (mocks.contentWidth - innerGutter) * colSpan / gridColumns;
@@ -188,7 +169,6 @@ describe('Image Optimization Service', () => {
       })();
 
       expect(imgWidth).toBe(expected);
-      expect(minThresholdSpy).toHaveBeenCalledWith(bp);
       expect(maxThresholdSpy).toHaveBeenCalledWith(bp);
       expect(containerWidthSpy).toHaveBeenCalledWith(bp, mocks.minThreshold, mocks.maxThreshold);
       expect(contentWidthSpy).toHaveBeenCalledWith(layoutConfig.useContainer, mocks.containerWidth, mocks.maxThreshold);

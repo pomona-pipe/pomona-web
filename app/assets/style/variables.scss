@@ -1,6 +1,11 @@
 /*
-** application scss variables and mixins here
-** will be read across other scss files
+** global variables and mixins here
+** will be read across other scss files and Vue components
 */
-$subheading-font-family: "Playfair Display", serif;
-$button-font-family: "Roboto", serif;
+
+// vuetify
+@import '~/assets/style/vuetify.scss';
+
+// application
+$subheading-font-family: 'Playfair Display', serif;
+$button-font-family: 'Roboto', serif;

@@ -2,17 +2,16 @@
 ** https://vuetifyjs.com/en/customization/sass-variables/#variable-api
 ** Overwrites default values of vuetify scss vars
 */
+@use 'sass:map';
+@import '~/node_modules/vuetify/src/styles/settings/_variables.scss';
 
-// vuetify font overwrites
+// typography
 $body-font-family: 'Open Sans', sans-serif;
 $heading-font-family: 'Poppins', sans-serif;
-
-
-//vuetify container padding overwrite 
-$container-padding-x: 16px;
-
-// vuetify button font overwrite
 $btn-text-transform: 'capitalize';
 
-// default colors
-@import '~/node_modules/vuetify/src/styles/settings/_colors.scss';
+// spacing
+$container-padding-x: 16px;
+
+// grid
+$grid-breakpoints: map.set($grid-breakpoints, 'xxl', 3840px - 16px);

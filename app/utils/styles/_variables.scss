@@ -1,0 +1,29 @@
+@import '~/assets/style/variables.scss';
+
+/*
+** From https://css-tricks.com/snippets/sass/strip-unit-function/
+*/
+@function strip-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    @return $number / ($number * 0 + 1);
+  }
+  @return $number;
+}
+
+:export {
+  // vuetify
+  bodyFontFamily: $body-font-family;
+  headingFontFamily: $heading-font-family;
+  btnTextTransform: $btn-text-transform;
+  containerPaddingX: $container-padding-x;
+  containerMaxWidths_keys: map-keys($container-max-widths);
+  containerMaxWidths_values: map-values($container-max-widths);
+  rowMarginX: -1 * strip-unit($grid-gutter) / 2;
+  colPaddingX: strip-unit($grid-gutter) / 2;
+  gridColumns: strip-unit($grid-columns);
+  gridBreakpoints_keys: map-keys($grid-breakpoints);
+  gridBreakpoints_values: map-values($grid-breakpoints);
+  // app
+  subheadingFontFamily: $subheading-font-family;
+  buttonFontFamily: $button-font-family;
+}
