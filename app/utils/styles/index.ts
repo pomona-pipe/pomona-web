@@ -23,7 +23,7 @@ const gridBreakpoints: Record<BreakpointKey, number> = objectFromLists(
   (value: string) => parseInt(value)
 );
 
-const containerMaxWidths: Record<BreakpointKey, number> = objectFromLists(
+const containerMaxWidths: Record<ContainerKey, number> = objectFromLists(
   listFromSass(containerMaxWidths_keys),
   listFromSass(containerMaxWidths_values),
   (value: string) => parseInt(value)
@@ -41,26 +41,30 @@ function objectFromLists(keys: string[], values: string[], modifier?: (value: st
   }), {});
 }
 
+function useStyles() {
+  return {
+    // vuetify
+    bodyFontFamily,
+    headingFontFamily,
+    btnTextTransform,
+    containerPaddingX: parseInt(containerPaddingX),
+    containerMaxWidths,
+    rowMarginX: parseInt(rowMarginX),
+    colPaddingX: parseInt(colPaddingX),
+    gridColumns: parseInt(gridColumns),
+    gridBreakpoints,
+    // app
+    subheadingFontFamily,
+    buttonFontFamily,
+  };
+}
+
 export type BreakpointKey = 'xs'| 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
-export const styles = {
-  // vuetify
-  bodyFontFamily,
-  headingFontFamily,
-  btnTextTransform,
-  containerPaddingX: parseInt(containerPaddingX),
-  containerMaxWidths,
-  rowMarginX: parseInt(rowMarginX),
-  colPaddingX: parseInt(colPaddingX),
-  gridColumns: parseInt(gridColumns),
-  gridBreakpoints,
-  // app
-  subheadingFontFamily,
-  buttonFontFamily,
-};
+export type ContainerKey = 'md' | 'lg' | 'xl';
 
 export default {
   listFromSass,
   objectFromLists,
-  styles,
+  useStyles,
 }

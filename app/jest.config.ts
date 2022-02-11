@@ -20,6 +20,7 @@ const config: Partial<Config.InitialOptions> = {
     '<rootDir>/components/**/*.vue',
     '<rootDir>/pages/**/*.vue',
     '<rootDir>/services/**',
+    '<rootDir>/utils/**',
   ],
 };
 export default config;

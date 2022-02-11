@@ -35,8 +35,17 @@ describe('Styles util', () => {
     }), {} as Record<string, string>);
 
     it('should convert 2 arrays to an object', () => {
-      const obj = objectFromLists(keys, values);
+      const obj = objectFromLists(keys, values, undefined);
       expect(obj).toMatchObject(expected);
     });
+
+    it('should modify the values of the object when there is a modifier function', () => {
+      const modifier = (value: string) => value.charAt(1);
+      const firstChars = objectFromLists(keys, values, modifier);
+      const expected = keys.reduce((acc, key, index) => ({
+        ...acc, [key]: values[index].charAt(1)
+      }), {} as Record<string, string>);
+      expect(firstChars).toMatchObject(expected);
+    })
   })
 })
