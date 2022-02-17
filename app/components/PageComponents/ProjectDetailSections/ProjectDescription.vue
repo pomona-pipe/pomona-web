@@ -1,5 +1,11 @@
 <template>
-  <section class="hero" :style="heroStyles">
+  <section class="hero">
+    <v-img
+      :src="heroImg.src"
+      :srcset="heroImg.srcset"
+      :sizes="heroImg.sizes"
+      :gradient="theme.dark ? theme.themes.dark.heroGradient : theme.themes.light.heroGradient"
+    />
     <!-- breadcrumbs nav -->
     <Breadcrumb :breadcrumbs="breadcrumbs"/>
     <v-container>
@@ -21,11 +27,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { Store, mapState } from 'vuex'
-import { Route } from 'vue-router/types'
+import { mapState } from 'vuex'
 import { find } from 'lodash'
 import moment from 'moment'
-import { IPrismic, IPrismicDocument } from '~/shims'
+import { createImgSrcset, createImgSizes } from '~/services/imgOptimization'
+import { IPrismicDocument } from '~/shims'
 import Breadcrumb from '~/components/Navigation/Breadcrumbs.vue'
 
 @Component({
@@ -33,20 +39,28 @@ import Breadcrumb from '~/components/Navigation/Breadcrumbs.vue'
     Breadcrumb,
   },
   computed: {
-    heroStyles() {
-      return {
-        'background-image': `linear-gradient(to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)), url("${
-          (this as any).document.data.hero_image.fileUrl
-        }")`,
-        'background-position': 'center',
-        'background-size': 'cover'
-      }
-    }
+    ...mapState('layout', ['theme']),
   }
 })
 export default class ProjectDescription extends Vue {
   document: IPrismicDocument | null = null
   breadcrumbs: IBreadcrumb[] | null = null
+
+  get heroImg() {
+    const url = (this as any).document.data.hero_image.fileUrl;
+    if(!url) {
+      return {
+        src: '',
+        srcSet: '',
+        sizes: '',
+      }
+    }
+    return {
+      src: url,
+      srcset: createImgSrcset(url),
+      sizes: createImgSizes(),
+    }
+  }
 
   formatDateString(dateString: string) {
     return moment(dateString).format('MMMM Do YYYY')
