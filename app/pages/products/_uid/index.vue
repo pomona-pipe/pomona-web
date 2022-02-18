@@ -1,6 +1,12 @@
 <template>
   <div>
-    <section class="hero" :style="heroStyles">
+    <section class="hero">
+      <v-img
+        :src="heroImg.src"
+        :srcset="heroImg.srcset"
+        :sizes="heroImg.sizes"
+        :gradient="theme.dark ? theme.themes.dark.heroGradient : theme.themes.light.heroGradient"
+      />
       <!-- breadcrumbs nav -->
       <Breadcrumb :breadcrumbs="breadcrumbs"/>
       <v-container>
@@ -18,8 +24,8 @@
         <!-- template for product category cards -->
         <v-row>
           <v-col
-            v-for="product in products"
-            :key="product.data.id"
+            v-for="(product, index) in products"
+            :key="product.id"
             cols="12"
             sm="6"
             md="4"
@@ -32,11 +38,9 @@
               height="100%"
             >
               <v-img
-                :src="
-                  product.data.hero_image
-                    ? product.data.hero_image.fileUrl
-                    : placeholders.file
-                "
+                :src="cardImgs[index].src"
+                :srcset="cardImgs[index].srcset"
+                :sizes="cardImgs[index].sizes"
                 height="200px"
               ></v-img>
 
@@ -54,6 +58,7 @@ import { Component, Vue } from 'nuxt-property-decorator'
 import { Route } from 'vue-router/types'
 import { Store, mapState } from 'vuex'
 import { find } from 'lodash'
+import { createImgSrcset, createImgSizes } from '~/services/imgOptimization'
 import pageVisits from '~/services/pageVisits'
 import { IPrismic, IPrismicDocument } from '~/shims'
 import Breadcrumb from '~/components/Navigation/Breadcrumbs.vue'
@@ -63,30 +68,65 @@ import Breadcrumb from '~/components/Navigation/Breadcrumbs.vue'
     Breadcrumb,
   },
   computed: {
-    ...mapState('layout', ['placeholders']),
-    heroStyles() {
-      return {
-        'background-image': `linear-gradient(to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)), url("${
-          (this as any).document.data.hero_image.fileUrl
-        }")`,
-        'background-position': 'center',
-        'background-size': 'cover'
-      }
-    }
+    ...mapState('layout', ['placeholders', 'theme']),
   }
 })
 export default class ProductCategoryPage extends Vue {
   document: IPrismicDocument | null = null
   breadcrumbs: IBreadcrumb[] | null = null
 
+  get heroImg() {
+    const url = this.document?.data.hero_image.fileUrl;
+    if(!url) {
+      return {
+        src: '',
+        srcSet: '',
+        sizes: '',
+      }
+    }
+    return {
+      src: url,
+      srcset: createImgSrcset(url),
+      sizes: createImgSizes(),
+    }
+  }
+
+  get cardImgs() {
+    const cardUrls = this.products.map((product: any) => product.data.hero_image.fileUrl);
+    const placeholder = {
+      src: (this as any).placeholders.file,
+      srcSet: '',
+      sizes: '',
+    };
+    if(cardUrls.length === 0) {
+      return [placeholder]
+    }
+    const cols = {
+      xs: 12,
+      sm: 6,
+      md: 4,
+      lg: 3,
+    };
+    return cardUrls.map((url?: string) => {
+      if(!url) {
+        return placeholder;
+      }
+      return {
+        src: url,
+        srcset: createImgSrcset(url, cols),
+        sizes: createImgSizes(cols),
+      };
+    })
+  }
+
   head() {
     return {
-      title: (this as any).document.data.title_tag,
+      title: this.document?.data.title_tag,
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: (this as any).document.data.meta_description
+          content: this.document?.data.meta_description
         }
       ]
     }
@@ -153,9 +193,9 @@ export default class ProductCategoryPage extends Vue {
       },
       {
         exact: true,
-        text: this.document!.data.name[0].text,
+        text: this.document?.data.name[0].text,
         to: {
-          path: `/products/${this.document!.uid}`
+          path: `/products/${this.document?.uid}`
         }
       }
     ]
