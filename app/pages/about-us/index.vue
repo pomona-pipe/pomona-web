@@ -1,7 +1,13 @@
 <template>
   <div id="about-us-page" class="page">
     <!-- Hero Banner -->
-    <section class="hero" :style="heroStyles">
+    <section class="hero">
+      <v-img
+        :src="heroImg.src"
+        :srcset="heroImg.srcset"
+        :sizes="heroImg.sizes"
+        :gradient="theme.dark ? theme.themes.dark.heroGradient : theme.themes.light.heroGradient"
+      />
       <v-container>
         <v-row align="center" class="fill-height">
           <v-col align="center">
@@ -41,26 +47,34 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import { Store, mapState } from 'vuex'
+import { createImgSrcset, createImgSizes } from '~/services/imgOptimization'
 import pageVisits from '~/services/pageVisits'
 import { IPrismic } from '~/shims'
 
 @Component({
   components: {},
   computed: {
+    ...mapState('layout', ['theme']),
     ...mapState('pages', ['aboutUs']),
-    heroStyles() {
-      return {
-        'background-image': `linear-gradient(to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)), url("${
-          (this as any).$store.state.pages.aboutUs[0].data.hero_background_image
-            .fileUrl
-        }")`,
-        'background-position': 'center',
-        'background-size': 'cover'
-      }
-    }
   }
 })
 export default class Index extends Vue {
+  get heroImg() {
+    const url = (this as any).aboutUs[0].data.hero_background_image.fileUrl;
+    if(!url) {
+      return {
+        src: '',
+        srcSet: '',
+        sizes: '',
+      }
+    }
+    return {
+      src: url,
+      srcset: createImgSrcset(url),
+      sizes: createImgSizes(),
+    }
+  }
+
   head() {
     return {
       title: (this as any).aboutUs[0].data.title_tag,
