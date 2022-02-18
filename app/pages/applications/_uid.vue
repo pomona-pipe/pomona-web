@@ -1,7 +1,13 @@
 <template>
   <div>
     <!-- Hero Section  -->
-    <section class="hero" :style="heroStyles">
+    <section class="hero">
+      <v-img
+        :src="heroImg.src"
+        :srcset="heroImg.srcset"
+        :sizes="heroImg.sizes"
+        :gradient="theme.dark ? theme.themes.dark.heroGradient : theme.themes.light.heroGradient"
+      />
       <!-- breadcrumbs nav -->
      <Breadcrumb :breadcrumbs="breadcrumbs"/>
       <v-container>
@@ -26,6 +32,7 @@ import { Component, Vue } from 'nuxt-property-decorator'
 import { Store, mapState } from 'vuex'
 import { Route } from 'vue-router/types'
 import { find } from 'lodash'
+import { createImgSrcset, createImgSizes } from '~/services/imgOptimization'
 import { IPrismic, IPrismicDocument } from '~/shims'
 import SlicesBlock from '~/components/PageComponents/ProductDetail/SlicesBlock.vue'
 import Breadcrumb from '~/components/Navigation/Breadcrumbs.vue'
@@ -36,22 +43,29 @@ import Breadcrumb from '~/components/Navigation/Breadcrumbs.vue'
     Breadcrumb,
   },
   computed: {
-    ...mapState('layout', ['placeholders']),
+    ...mapState('layout', ['placeholders', 'theme']),
     ...mapState('applications', ['applications']),
-    heroStyles() {
-      return {
-        'background-image': `linear-gradient(to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)), url("${
-          (this as any).document.data.hero_image.fileUrl
-        }")`,
-        'background-position': 'center',
-        'background-size': 'cover'
-      }
-    }
   }
 })
 export default class Index extends Vue {
   document: IPrismicDocument | null = null
   breadcrumbs: IBreadcrumb[] | null = null
+
+  get heroImg() {
+    const url = this.document?.data.hero_image.fileUrl;
+    if(!url) {
+      return {
+        src: '',
+        srcSet: '',
+        sizes: '',
+      }
+    }
+    return {
+      src: url,
+      srcset: createImgSrcset(url),
+      sizes: createImgSizes(),
+    }
+  }
 
   head() {
     return {
