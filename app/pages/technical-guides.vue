@@ -1,7 +1,13 @@
 <template>
   <div id="technical-guides-page" class="page hero-overlap">
     <!-- Hero -->
-    <section class="hero" :style="heroStyles">
+    <section class="hero">
+      <v-img
+        :src="heroImg.src"
+        :srcset="heroImg.srcset"
+        :sizes="heroImg.sizes"
+        :gradient="theme.dark ? theme.themes.dark.heroGradient : theme.themes.light.heroGradient"
+      />
       <v-container>
         <v-row align="center" class="fill-height">
           <v-col align="center">
@@ -49,27 +55,35 @@
 import { Component, Vue } from 'nuxt-property-decorator'
 import { Store, mapState } from 'vuex'
 import { mdiFilePdf } from '@mdi/js'
+import { createImgSrcset, createImgSizes } from '~/services/imgOptimization'
 import pageVisits from '~/services/pageVisits'
 import { IPrismic } from '~/shims'
 
 @Component({
   computed: {
+    ...mapState('layout', ['theme']),
     ...mapState('pages', ['technicalGuidesPage']),
-    heroStyles() {
-      return {
-        'background-image': `linear-gradient(to right top, rgba(36, 36, 36, 0.9), rgba(25, 32, 72, 0.7)), url("${
-          (this as any).$store.state.pages.technicalGuidesPage[0].data
-            .hero_image.fileUrl
-        }@459h")`,
-        'background-position': 'center',
-        'background-size': 'cover'
-      }
-    }
   }
 })
 export default class Index extends Vue {
   // Material Design Pdf Icon
   mdiFilePdf = mdiFilePdf
+
+  get heroImg() {
+    const url = (this as any).technicalGuidesPage[0].data.hero_image.fileUrl;
+    if(!url) {
+      return {
+        src: '',
+        srcSet: '',
+        sizes: '',
+      }
+    }
+    return {
+      src: url,
+      srcset: createImgSrcset(url),
+      sizes: createImgSizes(),
+    }
+  }
 
   head() {
     return {
