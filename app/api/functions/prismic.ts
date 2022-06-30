@@ -3,10 +3,9 @@ import ResolvedApi from 'prismic-javascript/d.ts/ResolvedApi'
 import { S3UploadFolder, IPrismicResult } from '../types'
 import { prismicMaxPerPage, cloudfrontUrl, frontendServerUrl } from '../data'
 import { getFileInfo, getFileThumbnail, paginate } from '../tools'
-import { setCacheValue, getCacheValue } from '../functions/redis'
 import { s3ListFiles } from './aws'
 
-export async function savePrismicResults(filePrefix: S3UploadFolder) {
+export async function fetchPrismicResults(filePrefix: S3UploadFolder, page?: number) {
   const results = await s3ListFiles(filePrefix)
   if(results.length === 0) {
     return results.length
@@ -31,21 +30,13 @@ export async function savePrismicResults(filePrefix: S3UploadFolder) {
       blob: { fileUrl, fileName, thumbnail }
     })
   }
-  return setCacheValue(filePrefix, prismicResults)
-    .then(() => results.length)
-    .catch((err => err))
-}
 
-export async function fetchPrismicResults(
-  filePrefix: S3UploadFolder,
-  page?: number
-) {
-  const prismicFiles: IPrismicResult[] = await getCacheValue(filePrefix)
   const paginatedResults = page
-    ? paginate(prismicFiles, page, prismicMaxPerPage)
-    : prismicFiles
+    ? paginate(prismicResults, page, prismicMaxPerPage)
+    : prismicResults
+
   return {
-    results_size: prismicFiles.length,
+    results_size: prismicResults.length,
     results: paginatedResults
   }
 }
