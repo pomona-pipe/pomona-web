@@ -1,17 +1,8 @@
-import { createClient } from 'redis'
 import { Dropbox } from 'dropbox/dist/Dropbox-sdk.min'
 import fetch from 'isomorphic-fetch'
 
 // frontend server
 export const frontendServerUrl = process.env.FRONTEND_SERVER_URL!
-
-// redis
-const redisPort = process.env.REDIS_PORT
-  ? parseInt(process.env.REDIS_PORT)
-  : 6379
-const redisHost = process.env.REDIS_HOST || '127.0.0.1' // env var in Dockerfile
-export const redisClient = createClient(redisPort, redisHost)
-export const redisCacheTime = 3600
 
 // aws
 export const cloudfrontUrl = 'https://d113q3lewv5kc2.cloudfront.net'

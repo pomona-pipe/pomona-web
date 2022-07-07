@@ -6,16 +6,7 @@ services:
     container_name: nuxt-app
     ports:
       - '3000:3000'
-    environment:
-      - REDIS_HOST=redis
     command: 'npm run start'
-    depends_on:
-      - redis
-
-  redis:
-    image: 'redis:alpine'
-    container_name: redis-prismic
-    command: ['redis-server', '--appendonly', 'yes']
 
   nginx:
     build: ./nginx
