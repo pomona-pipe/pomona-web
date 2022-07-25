@@ -15,12 +15,12 @@ const config: Partial<Config.InitialOptions> = {
     '^.+\\.js$': 'babel-jest',
     '.*\\.(vue)$': 'vue-jest',
   },
-  collectCoverage: true,
   collectCoverageFrom: [
     '<rootDir>/components/**/*.vue',
     '<rootDir>/pages/**/*.vue',
     '<rootDir>/services/**',
     '<rootDir>/utils/**',
   ],
+  clearMocks: true,
 };
 export default config;

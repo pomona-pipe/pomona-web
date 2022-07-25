@@ -18,54 +18,141 @@ const defaultLayoutConfig: ILayoutConfig = (() => {
 })();
 
 const utils = {
+  /**
+   * @param layoutConfig detailed column layout specs when cols param is provided
+   * @param layoutConfig.useContainer `=true` states if the layout uses a Vuetify container
+   * @param layoutConfig.rowMarginX `=-12` the row margin in a layout
+   * @param layoutConfig.colPaddingX `=12` left/right column pixel padding
+   * @param cols vuetify column width for each breakpoint; ex. `{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2, xxl: 1 }`. Note: no need to specify the same value for consecutive breakpoints, and no need to specify a starting value of 12; i.e. `{ xs: 12, sm: 6, md: 6, lg: 6, xl: 6, xxl: 6 }` could just be written as `{ sm: 6 }`
+   * @param pxThreshold `=100` the pixel threshold for deciding when to add a smaller image url
+   * @returns the minimum number of image URLs needed to satisfy the width requirement of each breakpoint and the pxThreshold param
+   */
+  getImgWidthSet(layoutConfig: ILayoutConfig, cols: Partial<ICols>, pxThreshold = 100) {
+    const { gridBreakpoints, gridColumns } = styleUtils.useStyles();
+    let colSpan = gridColumns; // default colSpan
+
+    let imgWidths = {} as Record<BreakpointKey, number | 'nativeSize'>;
+    for (const bp of Object.keys(gridBreakpoints)) {
+      colSpan = cols[bp as BreakpointKey] || colSpan; // use specified number of cols, or previous, or default
+      const width = utils.calcImgWidthInCols(bp as BreakpointKey, layoutConfig, colSpan);
+      imgWidths[bp as BreakpointKey] = width;
+    }
+
+    const widthsToUse = Object.values(imgWidths)
+      // sort in descending for deciding set of possible widths
+      .sort((a, b) => {
+        if (a === 'nativeSize') {
+          return -1;
+        }
+        if (b === 'nativeSize') {
+          return 1;
+        }
+        return b - a;
+      })
+      // choose values (starting from max) that meet or exceed px threshold
+      .reduce((prevValue, value) => {
+        if(value === 'nativeSize') {
+          prevValue.push(value);
+          return prevValue;
+        }
+        const isEmpty = prevValue.length === 0;
+        const meetsThreshold = (() => {
+          const min = Math.min(...(prevValue.filter((v) => v !== 'nativeSize') as number[]));
+          return min - value >= pxThreshold;
+        })();
+        if(isEmpty || meetsThreshold)  {
+          prevValue.push(value);
+        }
+        return prevValue;
+      }, [] as (number | 'nativeSize')[])
+      // reorder in ascending to choose lowest possible value for each breakpoint
+      .sort((a, b) => {
+        if (a === 'nativeSize') {
+          return 1;
+        }
+        if (b === 'nativeSize') {
+          return -1;
+        }
+        return a - b;
+      });
+
+    // choose minimum possible width for each breakpoint
+    return Object.entries(imgWidths).map(([bp, width]) => {
+      const widthToUse = width === 'nativeSize'
+        ? width
+        : widthsToUse.find((minWidth) => minWidth >= width)!;
+      return [bp, widthToUse] as [BreakpointKey, number | 'nativeSize'];
+    })
+  },
+
+  /**
+   *
+   * @param bp name of the vuetify breakpoint: xs | sm | md | lg | xl | xxl
+   * @param layoutConfig detailed column layout specs when cols param is provided
+   * @param layoutConfig.useContainer `=true` states if the layout uses a Vuetify container
+   * @param layoutConfig.rowMarginX `=-12` the row margin in a layout
+   * @param layoutConfig.colPaddingX `=12` left/right column pixel padding
+   * @param colSpan vuetify column value (out of 12)
+   * @returns the largest possible size of an image at a given breakpoint, with a given colspan
+   */
   calcImgWidthInCols(bp: BreakpointKey, layoutConfig: ILayoutConfig, colSpan: number) {
     const { useContainer, rowMarginX, colPaddingX } = layoutConfig;
-    const { gridBreakpoints, gridColumns } = styleUtils.useStyles();
-    const maxThreshold = utils.getMaxThresholds(gridBreakpoints)[bp];
-    const containerWidth = utils.getContainerWidth(bp, maxThreshold);
+    const { gridColumns } = styleUtils.useStyles();
+    const maxThreshold = utils.getMaxThresholds()[bp];
+    const containerWidth = utils.getContainerWidth(bp);
     const contentWidth = useContainer ? containerWidth : maxThreshold;
-    /**
-     * xxl breakpoint without container
-     * means that we need to use the native image, since we can't predict the max size needed
-     * however, we have to specify a numeric width so that the srcset and sizes will match
-     * therefore, we claim the width will be 3824, but will really use the native image
-     */
+
     if (bp === 'xxl' && !useContainer) {
-      return gridBreakpoints[bp];
+      return 'nativeSize';
     }
+
     const numCols = Math.round(gridColumns / colSpan);
     const innerGutter = 2 * colPaddingX * numCols + 2 * rowMarginX;
     const imgWidth = (contentWidth - innerGutter) * colSpan / gridColumns;
     return Math.ceil(imgWidth);
   },
 
-  getMaxThresholds(breakpoints: Record<BreakpointKey, number>) {
+
+  /**
+   * @returns the max pixel value of each vuetify breakpoint (xxl is null)
+   */
+  getMaxThresholds() {
     const { gridBreakpoints } = styleUtils.useStyles();
-    return Object.entries(breakpoints).reduce((prevValue, [key]) => {
-      if (key === 'xxl') {
-        prevValue[key as BreakpointKey] = Infinity;
-      }
-      else {
-        const nextBp = utils.getNextBp(key as BreakpointKey);
-        prevValue[key as BreakpointKey] = gridBreakpoints[nextBp!] - 1;
-      }
+    return Object.entries(gridBreakpoints).reduce((prevValue, [key]) => {
+      const nextBp = utils.getNextBp(key as BreakpointKey);
+      prevValue[key as BreakpointKey] = key === 'xxl'
+        ? Infinity
+        : gridBreakpoints[nextBp!] - 1;
       return prevValue;
     }, {} as Record<BreakpointKey, number>);
   },
 
+  /**
+   *
+   * @param bp name of the vuetify breakpoint: xs | sm | md | lg | xl | xxl
+   * @returns the next breakpoint; e.g. xs => sm
+   */
   getNextBp(bp: BreakpointKey): BreakpointKey | null {
     const { gridBreakpoints } = styleUtils.useStyles();
     const bpIndex = Object.keys(gridBreakpoints).indexOf(bp);
     return Object.keys(gridBreakpoints)[bpIndex + 1] as BreakpointKey ?? null;
   },
 
-  getContainerWidth(bp: BreakpointKey, maxThreshold: number) {
+  /**
+   *
+   * @param bp name of the vuetify breakpoint: xs | sm | md | lg | xl | xxl
+   * @returns inner content width of the vuetify container
+   */
+  getContainerWidth(bp: BreakpointKey) {
     let outerWidth: number;
     const { containerPaddingX, containerMaxWidths } = styleUtils.useStyles();
+    const maxThresholds = utils.getMaxThresholds();
     switch (bp) {
       case 'xs':
+        outerWidth = maxThresholds.xs;
+        break;
       case 'sm':
-        outerWidth = maxThreshold!;
+        outerWidth = maxThresholds.sm;
         break;
       case 'xxl':
         outerWidth = containerMaxWidths.xl;
@@ -77,10 +164,22 @@ const utils = {
   },
 };
 
+/**
+ *
+ * @param url image url
+ * @param cols vuetify column width for each breakpoint; ex. `{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2, xxl: 1 }`. Note: no need to specify the same value for consecutive breakpoints, and no need to specify a starting value of 12; i.e. `{ xs: 12, sm: 6, md: 6, lg: 6, xl: 6, xxl: 6 }` could just be written as `{ sm: 6 }`
+ * @param layoutConfig detailed column layout specs when cols param is provided
+ * @param layoutConfig.useContainer `=true` states if the layout uses a Vuetify container
+ * @param layoutConfig.rowMarginX `=-12` the row margin in a layout
+ * @param layoutConfig.colPaddingX `=12` left/right column pixel padding
+ * @param useWebp `=true` appends webp to end of image src
+ * @returns a string of comma-separated image URLs, representing the image at different sizes
+ */
 export function createImgSrcset(url: string, cols?: Partial<ICols>, layoutConfig = defaultLayoutConfig, useWebp = true): string {
-  const { gridBreakpoints, gridColumns } = styleUtils.useStyles();
+  const { gridBreakpoints } = styleUtils.useStyles();
+
   if (!cols) {
-    const maxThresholds = utils.getMaxThresholds(gridBreakpoints);
+    const maxThresholds = utils.getMaxThresholds();
     const { xs, sm, md, lg, xl } = maxThresholds;
     const { xxl } = gridBreakpoints;
     if (useWebp) {
@@ -88,47 +187,64 @@ export function createImgSrcset(url: string, cols?: Partial<ICols>, layoutConfig
     }
     return `${url}@${xs}w ${xs}w, ${url}@${sm}w ${sm}w, ${url}@${md}w ${md}w, ${url}@${lg}w ${lg}w, ${url}@${xl}w ${xl}w, ${url} ${xxl}w`;
   }
-  let srcset = '';
-  let colSpan = gridColumns; // default colSpan
-  for (const bp of Object.keys(gridBreakpoints)) {
-    colSpan = cols[bp as BreakpointKey] || colSpan; // use specified number of cols, or previous, or default
-    const { utils: { calcImgWidthInCols } } = defaultExport;
-    const width = calcImgWidthInCols(bp as BreakpointKey, layoutConfig, colSpan);
-    let newSrc: string;
-    if (bp !== 'xxl') {
-      newSrc = useWebp ? `${url}@${width}w.webp` : `${url}@${width}w`;
-      srcset += `${newSrc} ${width}w, `;
-      continue;
+
+  const srcset: string[] = [];
+  const colImgs = utils.getImgWidthSet(layoutConfig, cols);
+  colImgs.forEach(([bp, width]) => {
+    const isDupe = srcset.find((src) => src.includes(`${width}`));
+    if(isDupe) {
+      return;
     }
-    const useNativeImg = width === gridBreakpoints[bp];
+
+    const useNativeImg = width === 'nativeSize';
+    let newSrc: string;
     newSrc = useNativeImg ? url : `${url}@${width}w`;
     if (useWebp) {
       newSrc += '.webp';
     }
-    srcset += `${newSrc} ${width}w`;
-  }
-  return srcset;
+    srcset.push(`${newSrc} ${width}w`);
+  });
+
+  return srcset.join(', ');
 }
 
+/**
+ *
+ * @param cols vuetify column width for each breakpoint; ex. `{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2, xxl: 1 }`. Note: no need to specify the same value for consecutive breakpoints, and no need to specify a starting value of 12; i.e. `{ xs: 12, sm: 6, md: 6, lg: 6, xl: 6, xxl: 6 }` could just be written as `{ sm: 6 }`
+ * @param layoutConfig detailed column layout specs when cols param is provided
+ * @param layoutConfig.useContainer `=true` states if the layout uses a Vuetify container
+ * @param layoutConfig.rowMarginX `=-12` the row margin in a layout
+ * @param layoutConfig.colPaddingX `=12` left/right column pixel padding
+ * @returns a comma-separated list of which image size to use at each media query interval
+ */
 export function createImgSizes(cols?: Partial<ICols>, layoutConfig = defaultLayoutConfig): string {
-  const { gridBreakpoints, gridColumns } = styleUtils.useStyles();
-  const maxThresholds = utils.getMaxThresholds(gridBreakpoints);
+  const { gridBreakpoints } = styleUtils.useStyles();
+  const maxThresholds = utils.getMaxThresholds();
+
   if (!cols) {
     const { xs, sm, md, lg, xl } = maxThresholds;
     const { xxl } = gridBreakpoints;
     return `(max-width: ${xs}px) ${xs}px, (max-width: ${sm}px) ${sm}px, (max-width: ${md}px) ${md}px, (max-width: ${lg}px) ${lg}px, (max-width: ${xl}px) ${xl}px, (min-width: ${xxl}px) ${xxl}px`;
   }
-  let sizes = '';
-  let colSpan = gridColumns; // default colSpan
-  for (const bp of Object.keys(gridBreakpoints)) {
-    colSpan = cols[bp as BreakpointKey] || colSpan; // use specified number of cols, or previous, or default
-    const { utils: { calcImgWidthInCols } } = defaultExport;
-    const width = calcImgWidthInCols(bp as BreakpointKey, layoutConfig, colSpan);
-    sizes += bp === 'xxl'
-      ? `(min-width: ${gridBreakpoints.xxl}px) ${width}px`
-      : `(max-width: ${maxThresholds[bp as BreakpointKey]}px) ${width}px, `;
-  }
-  return sizes;
+
+  const sizes: string[] = [];
+  const colImgs = utils.getImgWidthSet(layoutConfig, cols);
+
+  colImgs.forEach(([bp, width], index, arr) => {
+    const prevSize = sizes[sizes.length - 1];
+    const isConsecutiveDupe = prevSize?.includes(`${width}`)
+    const isLast = index === arr.length - 1;
+    if(isConsecutiveDupe && !isLast) {
+      sizes.splice(-1, 1);
+    }
+
+    const bpSize = !isLast
+      ? `(max-width: ${maxThresholds[bp as BreakpointKey]}px) ${width}px`
+      : `(min-width: ${gridBreakpoints[bp as BreakpointKey]}px) ${width}px`;
+    sizes.push(bpSize);
+  });
+
+  return sizes.join(', ');
 }
 
 const defaultExport = {
