@@ -47,7 +47,7 @@ export default class GalleryWithText extends Vue {
     const galleryUrls = this.$props.slice.items.map((item: any) => item.section_image.fileUrl);
     const placeholder = {
       src: this.$store.state.layout.placeholders.file,
-      srcSet: '',
+      srcset: '',
       sizes: '',
     };
     if(galleryUrls.length === 0) {

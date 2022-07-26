@@ -78,7 +78,7 @@ export default class FeaturedProjects extends Vue {
     const cardUrls = this.projects.map((project: any) => project.data.hero_image.fileUrl);
     const placeholder = {
       src: (this as any).placeholders.file,
-      srcSet: '',
+      srcset: '',
       sizes: '',
     };
     if(cardUrls.length === 0) {

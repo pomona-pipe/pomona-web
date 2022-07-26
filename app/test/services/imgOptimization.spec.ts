@@ -87,30 +87,30 @@ describe('Image Optimization Service', () => {
 
   describe('createImgSrcset function', () => {
     const url = 'https://example.com/images/photo.jpg';
-    const splitImages = (srcSet: string) => {
-      return srcSet.split(/,\s?/);
+    const splitImages = (srcset: string) => {
+      return srcset.split(/,\s?/);
     };
 
     describe('Full-width image layout', () => {
       it('Should return image sources corresponding to each grid breakpoint', () => {
-        const srcSet = createImgSrcset(url, undefined, layoutConfig, useWebp);
+        const srcset = createImgSrcset(url, undefined, layoutConfig, useWebp);
         const { xs, sm, md, lg, xl } = globalMocks.maxThresholds;
         const { xxl } = globalMocks.styles.gridBreakpoints;
 
-        expect(srcSet).toEqual(`${url}@${xs}w ${xs}w, ${url}@${sm}w ${sm}w, ${url}@${md}w ${md}w, ${url}@${lg}w ${lg}w, ${url}@${xl}w ${xl}w, ${url} ${xxl}w`)
+        expect(srcset).toEqual(`${url}@${xs}w ${xs}w, ${url}@${sm}w ${sm}w, ${url}@${md}w ${md}w, ${url}@${lg}w ${lg}w, ${url}@${xl}w ${xl}w, ${url} ${xxl}w`)
       });
 
       it('Should return webp images when requested', () => {
         // without webp
-        let srcSet = createImgSrcset(url, undefined, layoutConfig, useWebp);
-        let images = splitImages(srcSet);
+        let srcset = createImgSrcset(url, undefined, layoutConfig, useWebp);
+        let images = splitImages(srcset);
 
         images.every((img) => expect(img.includes('.webp')).toBe(false))
 
         // with webp
         useWebp = true;
-        srcSet = createImgSrcset(url, undefined, layoutConfig, useWebp);
-        images = splitImages(srcSet);
+        srcset = createImgSrcset(url, undefined, layoutConfig, useWebp);
+        images = splitImages(srcset);
 
         images.every((img) => expect(img.includes('.webp')).toBe(true));
       });
@@ -144,14 +144,14 @@ describe('Image Optimization Service', () => {
 
       it('Should return webp when requested', () => {
         // without webp
-        let srcSet = createImgSrcset(url, cols, layoutConfig, useWebp);
-        let images = splitImages(srcSet);
+        let srcset = createImgSrcset(url, cols, layoutConfig, useWebp);
+        let images = splitImages(srcset);
 
         images.every((img) => expect(img.includes('.webp')).toBe(false));
 
         useWebp = true;
-        srcSet = createImgSrcset(url, cols, layoutConfig, useWebp);
-        images = splitImages(srcSet);
+        srcset = createImgSrcset(url, cols, layoutConfig, useWebp);
+        images = splitImages(srcset);
 
         images.every((img) => expect(img.includes('.webp')).toBe(true));
       });
@@ -173,8 +173,8 @@ describe('Image Optimization Service', () => {
           ['xl', dupeWidthSet.xl],
           ['xxl', dupeWidthSet.xxl],
         ]);
-        const srcSet = createImgSrcset(url, cols, layoutConfig, useWebp);
-        expect(srcSet).toEqual(`${url}@${dupeWidthSet.xs}w ${dupeWidthSet.xs}w, ${url}@${dupeWidthSet.md}w ${dupeWidthSet.md}w, ${url}@${dupeWidthSet.lg}w ${dupeWidthSet.lg}w`);
+        const srcset = createImgSrcset(url, cols, layoutConfig, useWebp);
+        expect(srcset).toEqual(`${url}@${dupeWidthSet.xs}w ${dupeWidthSet.xs}w, ${url}@${dupeWidthSet.md}w ${dupeWidthSet.md}w, ${url}@${dupeWidthSet.lg}w ${dupeWidthSet.lg}w`);
       });
     });
   });

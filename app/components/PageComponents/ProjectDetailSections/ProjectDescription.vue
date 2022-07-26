@@ -51,7 +51,7 @@ export default class ProjectDescription extends Vue {
     if(!url) {
       return {
         src: '',
-        srcSet: '',
+        srcset: '',
         sizes: '',
       }
     }

@@ -80,7 +80,7 @@ export default class ProductCategoryPage extends Vue {
     if(!url) {
       return {
         src: '',
-        srcSet: '',
+        srcset: '',
         sizes: '',
       }
     }
@@ -95,7 +95,7 @@ export default class ProductCategoryPage extends Vue {
     const cardUrls = this.products.map((product: any) => product.data.hero_image.fileUrl);
     const placeholder = {
       src: (this as any).placeholders.file,
-      srcSet: '',
+      srcset: '',
       sizes: '',
     };
     if(cardUrls.length === 0) {

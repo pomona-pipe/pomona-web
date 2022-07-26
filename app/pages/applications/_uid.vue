@@ -56,7 +56,7 @@ export default class Index extends Vue {
     if(!url) {
       return {
         src: '',
-        srcSet: '',
+        srcset: '',
         sizes: '',
       }
     }

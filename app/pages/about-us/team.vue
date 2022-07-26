@@ -85,7 +85,7 @@ export default class Index extends Vue {
     if(!url) {
       return {
         src: '',
-        srcSet: '',
+        srcset: '',
         sizes: '',
       }
     }
@@ -100,7 +100,7 @@ export default class Index extends Vue {
     const cardUrls = (this as any).employees.map((employee: any) => employee.data.profile_image?.fileUrl);
     const placeholder = {
       src: (this as any).placeholders.account,
-      srcSet: '',
+      srcset: '',
       sizes: '',
     };
     if(cardUrls.length === 0) {

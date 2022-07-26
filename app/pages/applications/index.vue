@@ -74,7 +74,7 @@ export default class Index extends Vue {
     if(!url) {
       return {
         src: '',
-        srcSet: '',
+        srcset: '',
         sizes: '',
       }
     }
@@ -89,7 +89,7 @@ export default class Index extends Vue {
     const cardUrls = (this as any).applications.map((app: any) => app.data.hero_image.fileUrl);
     const placeholder = {
       src: (this as any).placeholders.file,
-      srcSet: '',
+      srcset: '',
       sizes: '',
     };
     if(cardUrls.length === 0) {

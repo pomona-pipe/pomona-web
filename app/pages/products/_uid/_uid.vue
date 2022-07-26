@@ -68,7 +68,7 @@ export default class DetailPage extends Vue {
     if(!url) {
       return {
         src: '',
-        srcSet: '',
+        srcset: '',
         sizes: '',
       }
     }
